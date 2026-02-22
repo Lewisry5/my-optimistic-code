@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Toddler Adventure!</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #1a1a2e;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    overflow: hidden;
+    touch-action: none;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+  canvas {
+    border-radius: 12px;
+    box-shadow: 0 0 40px rgba(255,200,100,0.3);
+    image-rendering: pixelated;
+  }
+</style>
+</head>
+<body>
+<canvas id="game"></canvas>
+<script>
+// ============================================================
+// Toddler Adventure - A simple game for little ones
+// ============================================================
+
+const canvas = document.getElementById('game');
+const ctx = canvas.getContext('2d');
+
+// Responsive sizing
+function resize() {
+  const maxW = Math.min(window.innerWidth * 0.95, 900);
+  const maxH = Math.min(window.innerHeight * 0.9, 600);
+  const aspect = 3 / 2;
+  if (maxW / maxH > aspect) {
+    canvas.height = Math.floor(maxH);
+    canvas.width = Math.floor(maxH * aspect);
+  } else {
+    canvas.width = Math.floor(maxW);
+    canvas.height = Math.floor(maxW / aspect);
+  }
+}
+resize();
+window.addEventListener('resize', resize);
+
+// ---- World constants ----
+const GRAVITY = 0.6;
+const GROUND_Y_RATIO = 0.78; // ground at 78% of canvas height
+const WORLD_WIDTH = 3000;    // scrollable world width
+
+// ---- Colors ----
+const SKY_TOP = '#87CEEB';
+const SKY_BOTTOM = '#E0F7FA';
+const GROUND_COLOR = '#4CAF50';
+const DIRT_COLOR = '#8D6E63';
+const SUN_COLOR = '#FFD54F';
+
+// ---- Input state ----
+const keys = {};
+let touchLeft = false;
+let touchRight = false;
+let touchJump = false;
+
+// ---- Camera ----
+let cameraX = 0;
+
+// ---- Player ----
+const player = {
+  x: 200,
+  y: 0,
+  vx: 0,
+  vy: 0,
+  width: 50,
+  height: 60,
+  onGround: false,
+  facing: 1, // 1 = right, -1 = left
+  walkFrame: 0,
+  walkTimer: 0,
+  squish: 1.0,    // vertical squish for juice
+  stretch: 1.0,   // horizontal stretch
+  color: '#FF6B6B',      // body
+  eyeColor: '#FFFFFF',
+  pupilColor: '#2C3E50',
+  cheekColor: '#FF9999',
+  jumpCount: 0,
+  maxJumps: 2,  // double jump for fun!
+};
+
+// ---- Particles ----
+let particles = [];
+
+function spawnParticles(x, y, color, count, spread) {
+  for (let i = 0; i < count; i++) {
+    particles.push({
+      x: x,
+      y: y,
+      vx: (Math.random() - 0.5) * spread,
+      vy: -Math.random() * spread * 0.8,
+      life: 1.0,
+      decay: 0.015 + Math.random() * 0.02,
+      size: 3 + Math.random() * 6,
+      color: color,
+    });
+  }
+}
+
+// ---- Stars (collectibles) ----
+let stars = [];
+let score = 0;
+
+function generateStars() {
+  stars = [];
+  for (let i = 0; i < 25; i++) {
+    stars.push({
+      x: 150 + Math.random() * (WORLD_WIDTH - 300),
+      y: 0.3 + Math.random() * 0.35, // ratio of canvas height
+      collected: false,
+      bobOffset: Math.random() * Math.PI * 2,
+      size: 18 + Math.random() * 8,
+      color: ['#FFD700', '#FF69B4', '#00BFFF', '#7CFC00', '#FF6347', '#DDA0DD'][Math.floor(Math.random() * 6)],
+    });
+  }
+}
+generateStars();
+
+// ---- Scenery ----
+const clouds = [];
+for (let i = 0; i < 8; i++) {
+  clouds.push({
+    x: Math.random() * WORLD_WIDTH,
+    y: 0.08 + Math.random() * 0.2,
+    size: 40 + Math.random() * 60,
+    speed: 0.1 + Math.random() * 0.3,
+  });
+}
+
+const trees = [];
+for (let i = 0; i < 15; i++) {
+  trees.push({
+    x: 100 + i * (WORLD_WIDTH / 15) + Math.random() * 80,
+    size: 0.7 + Math.random() * 0.6,
+    trunkColor: ['#8D6E63', '#A1887F', '#795548'][Math.floor(Math.random() * 3)],
+    leafColor: ['#66BB6A', '#43A047', '#81C784', '#AED581'][Math.floor(Math.random() * 4)],
+  });
+}
+
+const flowers = [];
+for (let i = 0; i < 30; i++) {
+  flowers.push({
+    x: Math.random() * WORLD_WIDTH,
+    color: ['#FF6B6B', '#FFD93D', '#6BCB77', '#4D96FF', '#FF6BD6', '#FF9F45'][Math.floor(Math.random() * 6)],
+    size: 4 + Math.random() * 6,
+    stemHeight: 10 + Math.random() * 15,
+  });
+}
+
+// Hills in background
+const hills = [];
+for (let i = 0; i < 10; i++) {
+  hills.push({
+    x: i * (WORLD_WIDTH / 5),
+    width: 300 + Math.random() * 200,
+    height: 60 + Math.random() * 80,
+    color: ['#81C784', '#A5D6A7', '#66BB6A'][Math.floor(Math.random() * 3)],
+  });
+}
+
+// Platforms
+const platforms = [];
+for (let i = 0; i < 8; i++) {
+  platforms.push({
+    x: 300 + i * 320 + Math.random() * 100,
+    yRatio: 0.5 + Math.random() * 0.15,
+    width: 100 + Math.random() * 80,
+    height: 18,
+    color: ['#FFCC02', '#FF6B6B', '#6BCB77', '#4D96FF'][Math.floor(Math.random() * 4)],
+  });
+}
+
+// ---- Keyboard input ----
+window.addEventListener('keydown', e => {
+  keys[e.code] = true;
+  if (e.code === 'Space') e.preventDefault();
+});
+window.addEventListener('keyup', e => { keys[e.code] = false; });
+
+// ---- Touch input ----
+function handleTouches(e) {
+  e.preventDefault();
+  touchLeft = false;
+  touchRight = false;
+  touchJump = false;
+
+  const rect = canvas.getBoundingClientRect();
+  for (let i = 0; i < e.touches.length; i++) {
+    const tx = e.touches[i].clientX - rect.left;
+    const ty = e.touches[i].clientY - rect.top;
+    const relX = tx / rect.width;
+    const relY = ty / rect.height;
+
+    if (relY < 0.5) {
+      touchJump = true;
+    } else if (relX < 0.4) {
+      touchLeft = true;
+    } else if (relX > 0.6) {
+      touchRight = true;
+    } else {
+      touchJump = true;
+    }
+  }
+}
+
+canvas.addEventListener('touchstart', handleTouches, { passive: false });
+canvas.addEventListener('touchmove', handleTouches, { passive: false });
+canvas.addEventListener('touchend', e => {
+  e.preventDefault();
+  touchLeft = false;
+  touchRight = false;
+  touchJump = false;
+}, { passive: false });
+
+// Also handle mouse clicks for desktop testing
+let mouseDown = false;
+canvas.addEventListener('mousedown', e => {
+  mouseDown = true;
+  const rect = canvas.getBoundingClientRect();
+  const relX = (e.clientX - rect.left) / rect.width;
+  const relY = (e.clientY - rect.top) / rect.height;
+  if (relY < 0.5) {
+    touchJump = true;
+  } else if (relX < 0.4) {
+    touchLeft = true;
+  } else if (relX > 0.6) {
+    touchRight = true;
+  } else {
+    touchJump = true;
+  }
+});
+canvas.addEventListener('mouseup', () => {
+  mouseDown = false;
+  touchLeft = false;
+  touchRight = false;
+  touchJump = false;
+});
+
+// ---- Jump tracking (prevent holding jump) ----
+let jumpPressed = false;
+
+// ---- Update ----
+function update() {
+  const W = canvas.width;
+  const H = canvas.height;
+  const groundY = H * GROUND_Y_RATIO;
+  const speed = 4;
+  const jumpForce = -11;
+
+  // Movement
+  let moving = false;
+  if (keys['ArrowLeft'] || keys['KeyA'] || touchLeft) {
+    player.vx = -speed;
+    player.facing = -1;
+    moving = true;
+  } else if (keys['ArrowRight'] || keys['KeyD'] || touchRight) {
+    player.vx = speed;
+    player.facing = 1;
+    moving = true;
+  } else {
+    player.vx *= 0.8; // friction
+  }
+
+  // Jump
+  const wantJump = keys['Space'] || keys['ArrowUp'] || keys['KeyW'] || touchJump;
+  if (wantJump && !jumpPressed && player.jumpCount < player.maxJumps) {
+    player.vy = jumpForce;
+    player.jumpCount++;
+    player.squish = 1.3;
+    player.stretch = 0.7;
+    jumpPressed = true;
+
+    // Jump particles
+    const footY = player.y + player.height / 2;
+    const colors = ['#FFD700', '#FF69B4', '#00BFFF', '#7CFC00'];
+    spawnParticles(player.x, footY, colors[Math.floor(Math.random() * 4)], 8, 5);
+  }
+  if (!wantJump) {
+    jumpPressed = false;
+  }
+
+  // Physics
+  player.vy += GRAVITY;
+  player.x += player.vx;
+  player.y += player.vy;
+
+  // Platform collision
+  player.onGround = false;
+  for (const plat of platforms) {
+    const py = H * plat.yRatio;
+    if (
+      player.vy >= 0 &&
+      player.x + player.width / 2 > plat.x &&
+      player.x - player.width / 2 < plat.x + plat.width &&
+      player.y + player.height / 2 >= py &&
+      player.y + player.height / 2 - player.vy <= py + 4
+    ) {
+      player.y = py - player.height / 2;
+      player.vy = 0;
+      player.onGround = true;
+      player.jumpCount = 0;
+      if (player.squish > 1.05) {
+        player.squish = 0.7;
+        player.stretch = 1.3;
+        spawnParticles(player.x, py, plat.color, 6, 4);
+      }
+    }
+  }
+
+  // Ground collision
+  if (player.y + player.height / 2 >= groundY) {
+    player.y = groundY - player.height / 2;
+    player.vy = 0;
+    player.onGround = true;
+    player.jumpCount = 0;
+
+    // Landing squish
+    if (player.squish > 1.05) {
+      player.squish = 0.7;
+      player.stretch = 1.3;
+      spawnParticles(player.x, groundY, '#81C784', 6, 4);
+    }
+  }
+
+  // World bounds
+  if (player.x < 30) player.x = 30;
+  if (player.x > WORLD_WIDTH - 30) player.x = WORLD_WIDTH - 30;
+
+  // Walk animation
+  if (moving && player.onGround) {
+    player.walkTimer += 0.15;
+    player.walkFrame = Math.floor(player.walkTimer) % 4;
+  } else if (player.onGround) {
+    player.walkFrame = 0;
+    player.walkTimer = 0;
+  }
+
+  // Squish/stretch recovery
+  player.squish += (1.0 - player.squish) * 0.15;
+  player.stretch += (1.0 - player.stretch) * 0.15;
+
+  // Idle bounce
+  if (!moving && player.onGround) {
+    player.squish = 1.0 + Math.sin(Date.now() * 0.004) * 0.03;
+  }
+
+  // Star collection
+  for (const star of stars) {
+    if (star.collected) continue;
+    const sy = H * star.y + Math.sin(Date.now() * 0.003 + star.bobOffset) * 8;
+    const dx = player.x - star.x;
+    const dy = (player.y) - sy;
+    if (Math.abs(dx) < 35 && Math.abs(dy) < 35) {
+      star.collected = true;
+      score++;
+      spawnParticles(star.x, sy, star.color, 15, 8);
+      // Screen flash effect via particles
+      for (let i = 0; i < 5; i++) {
+        spawnParticles(
+          star.x + (Math.random() - 0.5) * 40,
+          sy + (Math.random() - 0.5) * 40,
+          '#FFFFFF', 3, 3
+        );
+      }
+    }
+  }
+
+  // Particles update
+  particles = particles.filter(p => {
+    p.x += p.vx;
+    p.y += p.vy;
+    p.vy += 0.15;
+    p.life -= p.decay;
+    return p.life > 0;
+  });
+
+  // Camera follow
+  const targetCam = player.x - W / 2;
+  cameraX += (targetCam - cameraX) * 0.08;
+  if (cameraX < 0) cameraX = 0;
+  if (cameraX > WORLD_WIDTH - W) cameraX = WORLD_WIDTH - W;
+
+  // Clouds drift
+  for (const cloud of clouds) {
+    cloud.x += cloud.speed;
+    if (cloud.x > WORLD_WIDTH + 100) cloud.x = -100;
+  }
+
+  // Check if all stars collected -> regenerate
+  if (stars.every(s => s.collected)) {
+    generateStars();
+    // Big celebration
+    for (let i = 0; i < 30; i++) {
+      spawnParticles(
+        player.x + (Math.random() - 0.5) * 200,
+        player.y + (Math.random() - 0.5) * 200,
+        ['#FFD700', '#FF69B4', '#00BFFF', '#7CFC00', '#FF6347'][Math.floor(Math.random() * 5)],
+        5, 10
+      );
+    }
+  }
+}
+
+// ---- Drawing helpers ----
+function drawStar5(cx, cy, outerR, innerR) {
+  ctx.beginPath();
+  for (let i = 0; i < 5; i++) {
+    const angle = -Math.PI / 2 + (i * 2 * Math.PI) / 5;
+    const ax = cx + Math.cos(angle) * outerR;
+    const ay = cy + Math.sin(angle) * outerR;
+    if (i === 0) ctx.moveTo(ax, ay);
+    else ctx.lineTo(ax, ay);
+    const angle2 = angle + Math.PI / 5;
+    ctx.lineTo(cx + Math.cos(angle2) * innerR, cy + Math.sin(angle2) * innerR);
+  }
+  ctx.closePath();
+}
+
+// ---- Render ----
+function render() {
+  const W = canvas.width;
+  const H = canvas.height;
+  const groundY = H * GROUND_Y_RATIO;
+
+  // Sky gradient
+  const skyGrad = ctx.createLinearGradient(0, 0, 0, groundY);
+  skyGrad.addColorStop(0, SKY_TOP);
+  skyGrad.addColorStop(1, SKY_BOTTOM);
+  ctx.fillStyle = skyGrad;
+  ctx.fillRect(0, 0, W, H);
+
+  // Sun
+  const sunX = W * 0.85 - cameraX * 0.05;
+  const sunY = H * 0.12;
+  ctx.fillStyle = SUN_COLOR;
+  ctx.beginPath();
+  ctx.arc(sunX, sunY, 40, 0, Math.PI * 2);
+  ctx.fill();
+  // Sun rays
+  ctx.strokeStyle = '#FFE082';
+  ctx.lineWidth = 3;
+  for (let i = 0; i < 8; i++) {
+    const angle = (Date.now() * 0.001 + i * Math.PI / 4);
+    ctx.beginPath();
+    ctx.moveTo(sunX + Math.cos(angle) * 48, sunY + Math.sin(angle) * 48);
+    ctx.lineTo(sunX + Math.cos(angle) * 62, sunY + Math.sin(angle) * 62);
+    ctx.stroke();
+  }
+
+  ctx.save();
+  ctx.translate(-cameraX, 0);
+
+  // Clouds (parallax)
+  for (const cloud of clouds) {
+    const cx = cloud.x - cameraX * 0.3;
+    const cy = H * cloud.y;
+    ctx.fillStyle = 'rgba(255,255,255,0.85)';
+    ctx.beginPath();
+    ctx.arc(cx, cy, cloud.size * 0.5, 0, Math.PI * 2);
+    ctx.arc(cx - cloud.size * 0.35, cy + 5, cloud.size * 0.35, 0, Math.PI * 2);
+    ctx.arc(cx + cloud.size * 0.4, cy + 3, cloud.size * 0.4, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  // Background hills (parallax)
+  for (const hill of hills) {
+    const hx = hill.x - cameraX * 0.4 + cameraX;
+    ctx.fillStyle = hill.color;
+    ctx.beginPath();
+    ctx.ellipse(hx, groundY, hill.width, hill.height, 0, Math.PI, 0);
+    ctx.fill();
+  }
+
+  // Ground
+  ctx.fillStyle = GROUND_COLOR;
+  ctx.fillRect(0, groundY, WORLD_WIDTH, H - groundY);
+
+  // Dirt layer
+  ctx.fillStyle = DIRT_COLOR;
+  ctx.fillRect(0, groundY + 20, WORLD_WIDTH, H - groundY - 20);
+
+  // Grass tufts
+  ctx.fillStyle = '#66BB6A';
+  for (let gx = 0; gx < WORLD_WIDTH; gx += 25) {
+    ctx.beginPath();
+    ctx.ellipse(gx, groundY, 12, 6, 0, Math.PI, 0);
+    ctx.fill();
+  }
+
+  // Trees
+  for (const tree of trees) {
+    const s = tree.size;
+    const tx = tree.x;
+    const ty = groundY;
+    // Trunk
+    ctx.fillStyle = tree.trunkColor;
+    ctx.fillRect(tx - 8 * s, ty - 50 * s, 16 * s, 50 * s);
+    // Leaves (three circles)
+    ctx.fillStyle = tree.leafColor;
+    ctx.beginPath();
+    ctx.arc(tx, ty - 60 * s, 30 * s, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(tx - 20 * s, ty - 45 * s, 25 * s, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(tx + 20 * s, ty - 45 * s, 25 * s, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  // Flowers
+  for (const f of flowers) {
+    const fy = groundY;
+    // Stem
+    ctx.strokeStyle = '#4CAF50';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(f.x, fy);
+    ctx.lineTo(f.x, fy - f.stemHeight);
+    ctx.stroke();
+    // Petals
+    ctx.fillStyle = f.color;
+    ctx.beginPath();
+    ctx.arc(f.x, fy - f.stemHeight, f.size, 0, Math.PI * 2);
+    ctx.fill();
+    // Center
+    ctx.fillStyle = '#FFD700';
+    ctx.beginPath();
+    ctx.arc(f.x, fy - f.stemHeight, f.size * 0.4, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  // Platforms
+  for (const plat of platforms) {
+    const py = H * plat.yRatio;
+    ctx.fillStyle = plat.color;
+    // Rounded platform
+    const r = 8;
+    ctx.beginPath();
+    ctx.moveTo(plat.x + r, py);
+    ctx.lineTo(plat.x + plat.width - r, py);
+    ctx.quadraticCurveTo(plat.x + plat.width, py, plat.x + plat.width, py + r);
+    ctx.lineTo(plat.x + plat.width, py + plat.height);
+    ctx.lineTo(plat.x, py + plat.height);
+    ctx.lineTo(plat.x, py + r);
+    ctx.quadraticCurveTo(plat.x, py, plat.x + r, py);
+    ctx.closePath();
+    ctx.fill();
+    // Highlight
+    ctx.fillStyle = 'rgba(255,255,255,0.3)';
+    ctx.fillRect(plat.x + 4, py + 2, plat.width - 8, 5);
+  }
+
+  // Stars
+  for (const star of stars) {
+    if (star.collected) continue;
+    const sy = H * star.y + Math.sin(Date.now() * 0.003 + star.bobOffset) * 8;
+    const pulse = 1 + Math.sin(Date.now() * 0.005 + star.bobOffset) * 0.1;
+
+    ctx.save();
+    ctx.translate(star.x, sy);
+    ctx.scale(pulse, pulse);
+    ctx.rotate(Math.sin(Date.now() * 0.002 + star.bobOffset) * 0.2);
+
+    // Glow
+    ctx.fillStyle = star.color + '44';
+    ctx.beginPath();
+    ctx.arc(0, 0, star.size * 1.5, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Star shape
+    ctx.fillStyle = star.color;
+    drawStar5(0, 0, star.size, star.size * 0.4);
+    ctx.fill();
+
+    // Shine
+    ctx.fillStyle = 'rgba(255,255,255,0.6)';
+    ctx.beginPath();
+    ctx.arc(-star.size * 0.2, -star.size * 0.2, star.size * 0.2, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.restore();
+  }
+
+  // Player character
+  const px = player.x;
+  const py = player.y;
+  const pw = player.width * player.stretch;
+  const ph = player.height * player.squish;
+
+  ctx.save();
+  ctx.translate(px, py);
+
+  // Shadow
+  ctx.fillStyle = 'rgba(0,0,0,0.15)';
+  const shadowY = (groundY - cameraX * 0 - py) + ph / 2; // approximate
+  ctx.beginPath();
+  ctx.ellipse(0, ph / 2 + 2, pw * 0.5, 5, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Legs (animated)
+  const legSwing = player.onGround && Math.abs(player.vx) > 0.5
+    ? Math.sin(player.walkTimer * 2) * 8
+    : 0;
+  ctx.fillStyle = '#E55B5B';
+  // Left leg
+  ctx.beginPath();
+  ctx.ellipse(-10 + legSwing, ph / 2 - 5, 9, 12, 0, 0, Math.PI * 2);
+  ctx.fill();
+  // Right leg
+  ctx.beginPath();
+  ctx.ellipse(10 - legSwing, ph / 2 - 5, 9, 12, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Body (rounded blob)
+  ctx.fillStyle = player.color;
+  ctx.beginPath();
+  ctx.ellipse(0, -2, pw / 2, ph / 2, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Belly highlight
+  ctx.fillStyle = '#FF8A8A';
+  ctx.beginPath();
+  ctx.ellipse(0, 4, pw * 0.3, ph * 0.25, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Arms (animated)
+  const armSwing = legSwing * 0.6;
+  ctx.fillStyle = player.color;
+  // Left arm
+  ctx.beginPath();
+  ctx.ellipse(-pw / 2 + 2, -5 - armSwing, 8, 14, -0.3, 0, Math.PI * 2);
+  ctx.fill();
+  // Right arm
+  ctx.beginPath();
+  ctx.ellipse(pw / 2 - 2, -5 + armSwing, 8, 14, 0.3, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Eyes
+  const eyeOffsetX = player.facing * 2;
+  // Left eye white
+  ctx.fillStyle = player.eyeColor;
+  ctx.beginPath();
+  ctx.ellipse(-10 + eyeOffsetX, -14, 10, 12, 0, 0, Math.PI * 2);
+  ctx.fill();
+  // Right eye white
+  ctx.beginPath();
+  ctx.ellipse(10 + eyeOffsetX, -14, 10, 12, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Pupils (look in movement direction)
+  const pupilShift = player.facing * 3;
+  ctx.fillStyle = player.pupilColor;
+  ctx.beginPath();
+  ctx.arc(-10 + eyeOffsetX + pupilShift, -13, 5, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.beginPath();
+  ctx.arc(10 + eyeOffsetX + pupilShift, -13, 5, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Eye shine
+  ctx.fillStyle = '#FFFFFF';
+  ctx.beginPath();
+  ctx.arc(-10 + eyeOffsetX + pupilShift - 2, -15, 2, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.beginPath();
+  ctx.arc(10 + eyeOffsetX + pupilShift - 2, -15, 2, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Mouth (happy!)
+  ctx.strokeStyle = '#C0392B';
+  ctx.lineWidth = 2;
+  ctx.lineCap = 'round';
+  ctx.beginPath();
+  if (!player.onGround) {
+    // Open mouth when in air (excited!)
+    ctx.fillStyle = '#C0392B';
+    ctx.ellipse(eyeOffsetX, -2, 6, 5, 0, 0, Math.PI * 2);
+    ctx.fill();
+  } else {
+    ctx.arc(eyeOffsetX, -4, 7, 0.1, Math.PI - 0.1);
+    ctx.stroke();
+  }
+
+  // Cheeks
+  ctx.fillStyle = player.cheekColor + '88';
+  ctx.beginPath();
+  ctx.ellipse(-18 + eyeOffsetX, -6, 6, 4, 0, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.beginPath();
+  ctx.ellipse(18 + eyeOffsetX, -6, 6, 4, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.restore();
+
+  // Particles
+  for (const p of particles) {
+    ctx.globalAlpha = p.life;
+    ctx.fillStyle = p.color;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  ctx.globalAlpha = 1;
+
+  ctx.restore(); // un-translate camera
+
+  // HUD - Score
+  ctx.fillStyle = 'rgba(0,0,0,0.2)';
+  ctx.beginPath();
+  ctx.arc(55, 40, 28, 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.fillStyle = '#FFD700';
+  drawStar5(40, 36, 14, 6);
+  ctx.fill();
+
+  ctx.fillStyle = '#FFFFFF';
+  ctx.font = 'bold ' + Math.floor(W * 0.03) + 'px sans-serif';
+  ctx.textAlign = 'left';
+  ctx.fillText(score, 58, 45);
+
+  // Touch controls hint (fades after first input)
+  if (!touchControlsUsed && !keyboardUsed) {
+    ctx.fillStyle = 'rgba(0,0,0,0.3)';
+    ctx.font = Math.floor(W * 0.022) + 'px sans-serif';
+    ctx.textAlign = 'center';
+
+    const pulse = 0.6 + Math.sin(Date.now() * 0.003) * 0.4;
+    ctx.globalAlpha = pulse;
+
+    ctx.fillText('\u2B05 Tap left side to go left', W / 2, H - 60);
+    ctx.fillText('Tap right side to go right \u27A1', W / 2, H - 40);
+    ctx.fillText('\u2B06 Tap top half to jump', W / 2, H - 20);
+    ctx.fillText('Or use Arrow Keys / WASD + Space', W / 2, H - 80);
+
+    ctx.globalAlpha = 1;
+  }
+}
+
+let touchControlsUsed = false;
+let keyboardUsed = false;
+
+// Track first input to hide hints
+window.addEventListener('keydown', () => { keyboardUsed = true; }, { once: true });
+canvas.addEventListener('touchstart', () => { touchControlsUsed = true; }, { once: true });
+canvas.addEventListener('mousedown', () => { touchControlsUsed = true; }, { once: true });
+
+// ---- Game loop ----
+function gameLoop() {
+  update();
+  render();
+  requestAnimationFrame(gameLoop);
+}
+
+// Initialize player position
+player.y = canvas.height * GROUND_Y_RATIO - player.height / 2;
+gameLoop();
+</script>
+</body>
+</html>
