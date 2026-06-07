@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Solar Charge — Battery Charging Time Calculator</title>
+<style>
+  :root {
+    --bg-0: #0a0e1a;
+    --bg-1: #0f1729;
+    --glass: rgba(255, 255, 255, 0.04);
+    --glass-brd: rgba(255, 255, 255, 0.10);
+    --glass-hi: rgba(255, 255, 255, 0.07);
+    --txt: #eef2ff;
+    --txt-dim: #94a3b8;
+    --txt-faint: #64748b;
+    --sun: #ffc24b;
+    --sun-deep: #ff9f1c;
+    --teal: #2dd4bf;
+    --teal-deep: #14b8a6;
+    --green: #4ade80;
+    --shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body { min-height: 100%; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: var(--txt);
+    background:
+      radial-gradient(1200px 700px at 80% -10%, rgba(255, 159, 28, 0.16), transparent 55%),
+      radial-gradient(1000px 800px at 5% 110%, rgba(45, 212, 191, 0.13), transparent 55%),
+      linear-gradient(160deg, var(--bg-1), var(--bg-0));
+    background-attachment: fixed;
+    min-height: 100vh;
+    padding: clamp(16px, 4vw, 48px);
+    -webkit-font-smoothing: antialiased;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* floating sun glow */
+  .ambient {
+    position: fixed;
+    top: -160px; right: -120px;
+    width: 420px; height: 420px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 194, 75, 0.30), rgba(255, 159, 28, 0.05) 60%, transparent 70%);
+    filter: blur(8px);
+    pointer-events: none;
+    z-index: 0;
+    animation: float 9s ease-in-out infinite;
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50%      { transform: translateY(26px) scale(1.05); }
+  }
+
+  .wrap {
+    width: 100%;
+    max-width: 1080px;
+    position: relative;
+    z-index: 1;
+  }
+
+  header.hero {
+    text-align: center;
+    margin-bottom: clamp(24px, 4vw, 40px);
+  }
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 16px;
+    border-radius: 999px;
+    background: var(--glass);
+    border: 1px solid var(--glass-brd);
+    backdrop-filter: blur(12px);
+    font-size: 12.5px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: var(--txt-dim);
+    margin-bottom: 18px;
+  }
+  .badge .dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--teal);
+    box-shadow: 0 0 12px var(--teal);
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:.35;} }
+
+  h1 {
+    font-size: clamp(28px, 5vw, 46px);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+    background: linear-gradient(120deg, #fff 20%, var(--sun) 70%, var(--sun-deep));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  header.hero p {
+    margin-top: 12px;
+    color: var(--txt-dim);
+    font-size: clamp(14px, 2.2vw, 16px);
+    max-width: 560px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: 1.05fr 0.95fr;
+    gap: clamp(16px, 2.5vw, 24px);
+    align-items: start;
+  }
+  @media (max-width: 860px) {
+    .grid { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    background: var(--glass);
+    border: 1px solid var(--glass-brd);
+    border-radius: 22px;
+    padding: clamp(20px, 3vw, 30px);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    box-shadow: var(--shadow);
+  }
+
+  .card-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--txt-dim);
+    margin-bottom: 22px;
+  }
+  .card-title svg { width: 18px; height: 18px; }
+
+  /* ---- Inputs ---- */
+  .field { margin-bottom: 22px; }
+  .field:last-child { margin-bottom: 0; }
+
+  .field-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 11px;
+  }
+  .field-head label { font-size: 14.5px; font-weight: 500; color: var(--txt); }
+  .field-head .val {
+    font-variant-numeric: tabular-nums;
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--sun);
+  }
+  .field-head .val small { color: var(--txt-faint); font-weight: 500; font-size: 12px; margin-left: 2px; }
+
+  input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 6px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.08);
+    outline: none;
+    cursor: pointer;
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    background: linear-gradient(145deg, #fff, #e8eefc);
+    border: 2px solid var(--sun);
+    box-shadow: 0 0 0 4px rgba(255,194,75,0.15), 0 4px 10px rgba(0,0,0,0.4);
+    transition: transform .12s ease, box-shadow .12s ease;
+  }
+  input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.12); }
+  input[type="range"]::-webkit-slider-thumb:active {
+    box-shadow: 0 0 0 7px rgba(255,194,75,0.22), 0 4px 10px rgba(0,0,0,0.4);
+  }
+  input[type="range"]::-moz-range-thumb {
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: #fff;
+    border: 2px solid var(--sun);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+    cursor: pointer;
+  }
+
+  select {
+    width: 100%;
+    appearance: none;
+    -webkit-appearance: none;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--glass-brd);
+    color: var(--txt);
+    padding: 13px 42px 13px 15px;
+    border-radius: 13px;
+    font-size: 15px;
+    font-family: inherit;
+    cursor: pointer;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path d='M1 1l5 5 5-5' stroke='%2394a3b8' stroke-width='1.8' fill='none' stroke-linecap='round'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    transition: border-color .15s ease;
+  }
+  select:focus { outline: none; border-color: var(--sun); }
+  select option { background: #131c30; color: var(--txt); }
+
+  .hint { margin-top: 8px; font-size: 12px; color: var(--txt-faint); line-height: 1.4; }
+
+  /* ---- Results ---- */
+  .result-card {
+    background:
+      radial-gradient(420px 220px at 100% 0%, rgba(255,159,28,0.12), transparent 60%),
+      var(--glass);
+  }
+
+  .ring-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 26px;
+  }
+  .ring { position: relative; width: 220px; height: 220px; }
+  .ring svg { transform: rotate(-90deg); }
+  .ring .center {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+  .ring .center .big {
+    font-size: 42px;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums;
+    background: linear-gradient(120deg, #fff, var(--sun));
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .ring .center .unit { font-size: 13px; color: var(--txt-dim); margin-top: 6px; letter-spacing: .5px; }
+  .ring .center .sub  { font-size: 12px; color: var(--txt-faint); margin-top: 3px; }
+
+  .equiv {
+    text-align: center;
+    color: var(--txt-dim);
+    font-size: 13.5px;
+    margin-bottom: 24px;
+  }
+  .equiv b { color: var(--teal); font-weight: 700; }
+
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+  @media (max-width: 420px) { .stats { grid-template-columns: 1fr; } }
+
+  .stat {
+    background: var(--glass-hi);
+    border: 1px solid var(--glass-brd);
+    border-radius: 15px;
+    padding: 15px 14px;
+    text-align: center;
+  }
+  .stat .icon { font-size: 18px; margin-bottom: 7px; line-height: 1; }
+  .stat .num {
+    font-size: 21px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.01em;
+  }
+  .stat .num small { font-size: 12px; font-weight: 600; color: var(--txt-dim); margin-left: 1px; }
+  .stat .lbl { font-size: 11px; color: var(--txt-faint); margin-top: 5px; text-transform: uppercase; letter-spacing: .6px; }
+
+  .stat.energy .num { color: var(--sun); }
+  .stat.money  .num { color: var(--green); }
+  .stat.co2    .num { color: var(--teal); }
+
+  .footnote {
+    text-align: center;
+    color: var(--txt-faint);
+    font-size: 11.5px;
+    margin-top: 28px;
+    line-height: 1.5;
+  }
+
+  .num-anim { transition: color .2s ease; }
+</style>
+</head>
+<body>
+<div class="ambient"></div>
+
+<div class="wrap">
+  <header class="hero">
+    <div class="badge"><span class="dot"></span> Solar Charge Estimator</div>
+    <h1>How fast will your battery<br>charge from solar?</h1>
+    <p>Dial in your system below and watch the estimate update instantly — charge time, energy stored, money saved and CO₂ avoided.</p>
+  </header>
+
+  <div class="grid">
+    <!-- ============ INPUTS ============ -->
+    <section class="card">
+      <div class="card-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="var(--sun)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/></svg>
+        Your System
+      </div>
+
+      <div class="field">
+        <div class="field-head">
+          <label for="capacity">Battery capacity</label>
+          <span class="val"><span id="capacityV">13.5</span><small> kWh</small></span>
+        </div>
+        <input type="range" id="capacity" min="2" max="60" step="0.5" value="13.5">
+        <div class="hint">Total usable storage of your home battery.</div>
+      </div>
+
+      <div class="field">
+        <div class="field-head">
+          <label for="charge">Current charge level</label>
+          <span class="val"><span id="chargeV">20</span><small> %</small></span>
+        </div>
+        <input type="range" id="charge" min="0" max="99" step="1" value="20">
+        <div class="hint">How full the battery is right now.</div>
+      </div>
+
+      <div class="field">
+        <div class="field-head">
+          <label for="array">Solar array size</label>
+          <span class="val"><span id="arrayV">6.0</span><small> kW</small></span>
+        </div>
+        <input type="range" id="array" min="0.5" max="20" step="0.25" value="6">
+        <div class="hint">Rated (DC) power of your solar panels.</div>
+      </div>
+
+      <div class="field">
+        <div class="field-head">
+          <label for="eff">System efficiency</label>
+          <span class="val"><span id="effV">80</span><small> %</small></span>
+        </div>
+        <input type="range" id="eff" min="55" max="95" step="1" value="80">
+        <div class="hint">Real-world losses: inverter, wiring, heat &amp; charge controller. ~75–85% is typical.</div>
+      </div>
+
+      <div class="field">
+        <div class="field-head">
+          <label for="location">Location &amp; sunshine</label>
+          <span class="val"><span id="pshV">5.5</span><small> PSH/day</small></span>
+        </div>
+        <select id="location">
+          <option value="6.5">Phoenix, AZ — very sunny (6.5)</option>
+          <option value="5.7">Los Angeles, CA — sunny (5.7)</option>
+          <option value="5.5" selected>Madrid / S. Europe — sunny (5.5)</option>
+          <option value="5.2">Miami, FL (5.2)</option>
+          <option value="5.0">Sydney, AU (5.0)</option>
+          <option value="4.5">Denver, CO (4.5)</option>
+          <option value="4.0">New York, NY (4.0)</option>
+          <option value="3.3">Berlin, DE (3.3)</option>
+          <option value="2.8">Seattle, WA (2.8)</option>
+          <option value="2.5">London, UK — cloudy (2.5)</option>
+          <option value="custom">Custom…</option>
+        </select>
+        <div class="hint">Peak Sun Hours = average hours/day of full-strength sun for your location &amp; season.</div>
+      </div>
+
+      <div class="field" id="customPshField" style="display:none;">
+        <div class="field-head">
+          <label for="customPsh">Custom peak sun hours</label>
+          <span class="val"><span id="customPshV">4.0</span><small> h/day</small></span>
+        </div>
+        <input type="range" id="customPsh" min="1" max="8" step="0.1" value="4">
+      </div>
+
+      <div class="field">
+        <div class="field-head">
+          <label for="rate">Electricity price</label>
+          <span class="val"><span id="rateV">0.30</span><small> /kWh</small></span>
+        </div>
+        <input type="range" id="rate" min="0.05" max="0.80" step="0.01" value="0.30">
+        <div class="hint">Used to estimate grid cost avoided by charging from solar.</div>
+      </div>
+    </section>
+
+    <!-- ============ RESULTS ============ -->
+    <section class="card result-card">
+      <div class="card-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="var(--teal)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"/></svg>
+        Estimated Result
+      </div>
+
+      <div class="ring-wrap">
+        <div class="ring">
+          <svg width="220" height="220" viewBox="0 0 220 220">
+            <defs>
+              <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#ffc24b"/>
+                <stop offset="100%" stop-color="#ff9f1c"/>
+              </linearGradient>
+            </defs>
+            <circle cx="110" cy="110" r="96" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="14"/>
+            <circle id="ringFill" cx="110" cy="110" r="96" fill="none" stroke="url(#ringGrad)" stroke-width="14"
+                    stroke-linecap="round" stroke-dasharray="603.2" stroke-dashoffset="603.2"
+                    style="transition: stroke-dashoffset .6s cubic-bezier(.4,0,.2,1); filter: drop-shadow(0 0 8px rgba(255,159,28,.5));"/>
+          </svg>
+          <div class="center">
+            <div class="big" id="timeBig">6.5</div>
+            <div class="unit" id="timeUnit">hours to full</div>
+            <div class="sub" id="timeSub">of peak sun</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="equiv" id="equiv">≈ <b>1.2 sunny days</b> at this location</div>
+
+      <div class="stats">
+        <div class="stat energy">
+          <div class="icon">🔋</div>
+          <div class="num"><span id="kwh">10.8</span><small> kWh</small></div>
+          <div class="lbl">Energy stored</div>
+        </div>
+        <div class="stat money">
+          <div class="icon">💰</div>
+          <div class="num"><small>$</small><span id="money">3.24</span></div>
+          <div class="lbl">Grid cost avoided</div>
+        </div>
+        <div class="stat co2">
+          <div class="icon">🌍</div>
+          <div class="num"><span id="co2">4.3</span><small> kg</small></div>
+          <div class="lbl">CO₂ avoided</div>
+        </div>
+      </div>
+
+      <div class="footnote">
+        Estimates assume the array can drive the battery at its rated, loss-adjusted output during sun hours.
+        Real charge time varies with weather, panel angle, temperature &amp; household load.
+      </div>
+    </section>
+  </div>
+</div>
+
+<script>
+// ====================================================================
+//  Solar Charge Estimator — live calculator
+// ====================================================================
+
+const CO2_PER_KWH = 0.40; // kg CO2 avoided per kWh of grid electricity (approx. grid average)
+const RING_CIRC   = 2 * Math.PI * 96; // circumference of the progress ring
+
+// --- element refs ---
+const els = {
+  capacity: document.getElementById('capacity'),
+  charge:   document.getElementById('charge'),
+  array:    document.getElementById('array'),
+  eff:      document.getElementById('eff'),
+  location: document.getElementById('location'),
+  customPsh:document.getElementById('customPsh'),
+  customPshField: document.getElementById('customPshField'),
+  rate:     document.getElementById('rate'),
+};
+
+// --- formatting helpers ---
+const fmt = (n, d = 1) => n.toLocaleString(undefined, { minimumFractionDigits: d, maximumFractionDigits: d });
+
+function currentPSH() {
+  if (els.location.value === 'custom') return parseFloat(els.customPsh.value);
+  return parseFloat(els.location.value);
+}
+
+function compute() {
+  const capacity = parseFloat(els.capacity.value);   // kWh
+  const charge   = parseFloat(els.charge.value);      // %
+  const array    = parseFloat(els.array.value);       // kW (DC rated)
+  const eff       = parseFloat(els.eff.value) / 100;   // fraction
+  const psh       = currentPSH();                      // peak sun hours / day
+  const rate      = parseFloat(els.rate.value);        // $/kWh
+
+  // Energy still needed to reach 100%
+  const energyNeeded = capacity * (1 - charge / 100);  // kWh
+
+  // Effective charging power = rated array power adjusted for system losses
+  const effPower = array * eff;                        // kW delivered to the battery in full sun
+
+  // Hours of *peak* sun required, and equivalent real-world days
+  const peakHoursNeeded = energyNeeded / effPower;     // peak-sun-hours
+  const days            = peakHoursNeeded / psh;        // calendar days of this location's sun
+
+  // Cost & environmental impact of the stored solar energy
+  const moneySaved = energyNeeded * rate;
+  const co2Saved   = energyNeeded * CO2_PER_KWH;
+
+  // Charge fraction already in the battery (for the ring fill)
+  const chargeFrac = charge / 100;
+
+  return { energyNeeded, peakHoursNeeded, days, moneySaved, co2Saved, chargeFrac, charge };
+}
+
+function render() {
+  // mirror slider values into their labels
+  document.getElementById('capacityV').textContent = fmt(parseFloat(els.capacity.value), 1);
+  document.getElementById('chargeV').textContent   = els.charge.value;
+  document.getElementById('arrayV').textContent    = fmt(parseFloat(els.array.value), 2).replace(/0$/, '');
+  document.getElementById('effV').textContent      = els.eff.value;
+  document.getElementById('rateV').textContent     = fmt(parseFloat(els.rate.value), 2);
+  document.getElementById('pshV').textContent      = fmt(currentPSH(), 1);
+  document.getElementById('customPshV').textContent= fmt(parseFloat(els.customPsh.value), 1);
+
+  const r = compute();
+
+  // ---- Headline time-to-full ----
+  // Show in hours if under a day's worth, else show in days for readability.
+  const bigEl  = document.getElementById('timeBig');
+  const unitEl = document.getElementById('timeUnit');
+  const subEl  = document.getElementById('timeSub');
+
+  if (r.charge >= 99) {
+    bigEl.textContent = '100%';
+    unitEl.textContent = 'already full';
+    subEl.textContent = 'no charging needed';
+  } else if (r.peakHoursNeeded < 12) {
+    bigEl.textContent = fmt(r.peakHoursNeeded, 1);
+    unitEl.textContent = 'hours to full';
+    subEl.textContent = 'of peak sun';
+  } else {
+    bigEl.textContent = fmt(r.peakHoursNeeded, 0);
+    unitEl.textContent = 'peak-sun hrs to full';
+    subEl.textContent = 'spread across days';
+  }
+
+  // ---- Ring shows how full the battery already is ----
+  const offset = RING_CIRC * (1 - r.chargeFrac);
+  document.getElementById('ringFill').style.strokeDashoffset = offset;
+
+  // ---- Equivalent real-world days ----
+  const equivEl = document.getElementById('equiv');
+  if (r.charge >= 99) {
+    equivEl.innerHTML = 'Battery is topped up — soak in the sunshine ☀️';
+  } else {
+    const dayLabel = r.days < 1
+      ? `${Math.round(r.days * 24 * 10) / 10} sun-equivalent hours`
+      : `${fmt(r.days, 1)} sunny day${r.days >= 1.05 ? 's' : ''}`;
+    equivEl.innerHTML = `≈ <b>${dayLabel}</b> at this location`;
+  }
+
+  // ---- Energy / cost / CO2 stats ----
+  document.getElementById('kwh').textContent   = fmt(r.energyNeeded, 1);
+  document.getElementById('money').textContent = fmt(r.moneySaved, 2);
+  document.getElementById('co2').textContent   = fmt(r.co2Saved, 1);
+
+  // paint slider fills
+  paintRanges();
+}
+
+// Subtle gradient fill on the slider track to show position
+function paintRanges() {
+  document.querySelectorAll('input[type="range"]').forEach(el => {
+    const min = parseFloat(el.min), max = parseFloat(el.max);
+    const pct = ((parseFloat(el.value) - min) / (max - min)) * 100;
+    el.style.background =
+      `linear-gradient(90deg, var(--sun) 0%, var(--sun-deep) ${pct}%, rgba(255,255,255,0.08) ${pct}%)`;
+  });
+}
+
+// --- wire up listeners ---
+Object.values(els).forEach(el => {
+  if (el && el.tagName) el.addEventListener('input', render);
+});
+
+els.location.addEventListener('change', () => {
+  els.customPshField.style.display = els.location.value === 'custom' ? 'block' : 'none';
+  render();
+});
+
+// initial paint
+render();
+</script>
+</body>
+</html>
