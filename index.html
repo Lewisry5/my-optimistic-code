@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Optimistic Code — Apps</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { min-height: 100%; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: #eef2ff;
+    background:
+      radial-gradient(1200px 700px at 80% -10%, rgba(255, 159, 28, 0.16), transparent 55%),
+      radial-gradient(1000px 800px at 5% 110%, rgba(45, 212, 191, 0.13), transparent 55%),
+      linear-gradient(160deg, #0f1729, #0a0e1a);
+    background-attachment: fixed;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: clamp(20px, 5vw, 56px);
+    -webkit-font-smoothing: antialiased;
+  }
+  .ambient {
+    position: fixed; top: -160px; right: -120px;
+    width: 420px; height: 420px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,194,75,0.30), rgba(255,159,28,0.05) 60%, transparent 70%);
+    filter: blur(8px); pointer-events: none; z-index: 0;
+    animation: float 9s ease-in-out infinite;
+  }
+  @keyframes float { 0%,100%{transform:translateY(0) scale(1);} 50%{transform:translateY(26px) scale(1.05);} }
+
+  .wrap { width: 100%; max-width: 760px; position: relative; z-index: 1; }
+
+  header { text-align: center; margin-bottom: clamp(28px, 5vw, 44px); }
+  .badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 7px 16px; border-radius: 999px;
+    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.10);
+    backdrop-filter: blur(12px);
+    font-size: 12.5px; letter-spacing: 0.5px; text-transform: uppercase;
+    color: #94a3b8; margin-bottom: 18px;
+  }
+  .badge .dot { width: 8px; height: 8px; border-radius: 50%; background: #2dd4bf; box-shadow: 0 0 12px #2dd4bf; animation: pulse 2s ease-in-out infinite; }
+  @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:.35;} }
+
+  h1 {
+    font-size: clamp(30px, 6vw, 50px); font-weight: 700; letter-spacing: -0.02em; line-height: 1.05;
+    background: linear-gradient(120deg, #fff 20%, #ffc24b 70%, #ff9f1c);
+    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  header p { margin-top: 12px; color: #94a3b8; font-size: clamp(14px, 2.4vw, 16px); }
+
+  .cards { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(14px, 2.5vw, 20px); }
+  @media (max-width: 600px) { .cards { grid-template-columns: 1fr; } }
+
+  a.card {
+    display: block; text-decoration: none; color: inherit;
+    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.10);
+    border-radius: 22px; padding: clamp(22px, 3.5vw, 30px);
+    backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.45);
+    transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease;
+    position: relative; overflow: hidden;
+  }
+  a.card::after {
+    content: ""; position: absolute; inset: 0; border-radius: 22px;
+    background: radial-gradient(420px 200px at 100% 0%, rgba(255,159,28,0.10), transparent 60%);
+    opacity: 0; transition: opacity .18s ease; pointer-events: none;
+  }
+  a.card:hover { transform: translateY(-4px); border-color: rgba(255,194,75,0.45); box-shadow: 0 26px 60px rgba(0,0,0,0.55); }
+  a.card:hover::after { opacity: 1; }
+  a.card.teal:hover { border-color: rgba(45,212,191,0.45); }
+
+  .icon {
+    width: 56px; height: 56px; border-radius: 16px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px; margin-bottom: 18px;
+  }
+  .icon.sun  { background: linear-gradient(145deg, rgba(255,194,75,0.22), rgba(255,159,28,0.10)); border: 1px solid rgba(255,194,75,0.35); }
+  .icon.game { background: linear-gradient(145deg, rgba(45,212,191,0.20), rgba(20,184,166,0.08)); border: 1px solid rgba(45,212,191,0.35); }
+
+  a.card h2 { font-size: 20px; font-weight: 700; letter-spacing: -0.01em; margin-bottom: 8px; }
+  a.card p { font-size: 13.5px; color: #94a3b8; line-height: 1.5; }
+  .go { margin-top: 18px; display: inline-flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 600; color: #ffc24b; }
+  a.card.teal .go { color: #2dd4bf; }
+  .go svg { width: 15px; height: 15px; transition: transform .18s ease; }
+  a.card:hover .go svg { transform: translateX(4px); }
+
+  footer { text-align: center; margin-top: clamp(28px, 5vw, 44px); color: #64748b; font-size: 12px; }
+</style>
+</head>
+<body>
+<div class="ambient"></div>
+<div class="wrap">
+  <header>
+    <div class="badge"><span class="dot"></span> My Optimistic Code</div>
+    <h1>Little apps,<br>made to play with.</h1>
+    <p>Pick one to open.</p>
+  </header>
+
+  <div class="cards">
+    <a class="card" href="solar-battery-calculator.html">
+      <div class="icon sun">☀️</div>
+      <h2>Solar Charge Calculator</h2>
+      <p>See how fast a home battery charges from solar — with a live fill curve, energy, cost &amp; CO₂ savings.</p>
+      <span class="go">Open <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+    </a>
+
+    <a class="card teal" href="game.html">
+      <div class="icon game">🎮</div>
+      <h2>Toddler Adventure</h2>
+      <p>A simple, friendly side-scrolling game built for little hands and big smiles.</p>
+      <span class="go">Play <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+    </a>
+  </div>
+
+  <footer>Hosted on GitHub Pages · open on any device</footer>
+</div>
+</body>
+</html>
