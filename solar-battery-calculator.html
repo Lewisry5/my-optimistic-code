@@ -19,6 +19,7 @@
     --teal: #2dd4bf;
     --teal-deep: #14b8a6;
     --green: #4ade80;
+    --red: #f87171;
     --shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
   }
 
@@ -42,7 +43,6 @@
     align-items: center;
   }
 
-  /* floating sun glow */
   .ambient {
     position: fixed;
     top: -160px; right: -120px;
@@ -145,7 +145,6 @@
   }
   .card-title svg { width: 18px; height: 18px; }
 
-  /* ---- Inputs ---- */
   .field { margin-bottom: 22px; }
   .field:last-child { margin-bottom: 0; }
 
@@ -219,7 +218,6 @@
 
   .hint { margin-top: 8px; font-size: 12px; color: var(--txt-faint); line-height: 1.4; }
 
-  /* ---- Results ---- */
   .result-card {
     background:
       radial-gradient(420px 220px at 100% 0%, rgba(255,159,28,0.12), transparent 60%),
@@ -253,8 +251,12 @@
     -webkit-background-clip: text; background-clip: text;
     -webkit-text-fill-color: transparent;
   }
+  .ring .center .big.warn {
+    background: linear-gradient(120deg, #fff, var(--red));
+    -webkit-background-clip: text; background-clip: text;
+  }
   .ring .center .unit { font-size: 13px; color: var(--txt-dim); margin-top: 6px; letter-spacing: .5px; }
-  .ring .center .sub  { font-size: 12px; color: var(--txt-faint); margin-top: 3px; }
+  .ring .center .sub  { font-size: 12px; color: var(--txt-faint); margin-top: 3px; max-width: 150px; }
 
   .equiv {
     text-align: center;
@@ -292,15 +294,33 @@
   .stat.money  .num { color: var(--green); }
   .stat.co2    .num { color: var(--teal); }
 
+  /* ---- Charge curve card ---- */
+  .chart-card { margin-top: clamp(16px, 2.5vw, 24px); }
+  .chart-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+  .legend { display: flex; gap: 16px; flex-wrap: wrap; }
+  .legend span { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: var(--txt-dim); }
+  .legend i { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }
+  .legend .l-day  { background: rgba(255,194,75,0.22); border: 1px solid rgba(255,194,75,0.4); }
+  .legend .l-night{ background: rgba(99,130,180,0.12); border: 1px solid rgba(99,130,180,0.3); }
+  .legend .l-soc  { background: var(--sun); }
+
+  .chart-wrap { width: 100%; }
+  .chart-wrap svg { width: 100%; height: auto; display: block; }
+
   .footnote {
     text-align: center;
     color: var(--txt-faint);
     font-size: 11.5px;
-    margin-top: 28px;
+    margin-top: 22px;
     line-height: 1.5;
   }
-
-  .num-anim { transition: color .2s ease; }
 </style>
 </head>
 <body>
@@ -310,7 +330,7 @@
   <header class="hero">
     <div class="badge"><span class="dot"></span> Solar Charge Estimator</div>
     <h1>How fast will your battery<br>charge from solar?</h1>
-    <p>Dial in your system below and watch the estimate update instantly — charge time, energy stored, money saved and CO₂ avoided.</p>
+    <p>Dial in your system below and watch it update live — charge time, the fill curve over the day, energy stored, money saved and CO₂ avoided.</p>
   </header>
 
   <div class="grid">
@@ -355,6 +375,15 @@
         </div>
         <input type="range" id="eff" min="55" max="95" step="1" value="80">
         <div class="hint">Real-world losses: inverter, wiring, heat &amp; charge controller. ~75–85% is typical.</div>
+      </div>
+
+      <div class="field">
+        <div class="field-head">
+          <label for="load">Household load while charging</label>
+          <span class="val"><span id="loadV">0.4</span><small> kW</small></span>
+        </div>
+        <input type="range" id="load" min="0" max="6" step="0.1" value="0.4">
+        <div class="hint">Average power the house draws during the day. Solar covers this first — the rest charges the battery.</div>
       </div>
 
       <div class="field">
@@ -444,36 +473,55 @@
           <div class="lbl">CO₂ avoided</div>
         </div>
       </div>
-
-      <div class="footnote">
-        Estimates assume the array can drive the battery at its rated, loss-adjusted output during sun hours.
-        Real charge time varies with weather, panel angle, temperature &amp; household load.
-      </div>
     </section>
   </div>
+
+  <!-- ============ CHARGE CURVE ============ -->
+  <section class="card chart-card">
+    <div class="chart-head">
+      <div class="card-title" style="margin-bottom:0;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="var(--sun)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l5-5 4 3 7-8"/><path d="M3 21h18"/></svg>
+        Charge Curve
+      </div>
+      <div class="legend">
+        <span><i class="l-soc"></i> Battery %</span>
+        <span><i class="l-day"></i> Daylight</span>
+        <span><i class="l-night"></i> Night</span>
+      </div>
+    </div>
+    <div class="chart-wrap">
+      <svg id="chart" viewBox="0 0 1000 300" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Battery state of charge over time"></svg>
+    </div>
+    <div class="footnote">
+      The curve simulates a bell-shaped solar day (output peaking near midday) starting at sunrise, with household load drawn first.
+      Real charge time varies with weather, panel angle, temperature &amp; battery charge tapering near 100%.
+    </div>
+  </section>
 </div>
 
 <script>
 // ====================================================================
-//  Solar Charge Estimator — live calculator
+//  Solar Charge Estimator — live calculator + day-by-day simulation
 // ====================================================================
 
-const CO2_PER_KWH = 0.40; // kg CO2 avoided per kWh of grid electricity (approx. grid average)
-const RING_CIRC   = 2 * Math.PI * 96; // circumference of the progress ring
+const CO2_PER_KWH = 0.40;            // kg CO2 avoided per kWh of grid electricity
+const RING_CIRC   = 2 * Math.PI * 96;
+const DAYLIGHT_H  = 12;              // modelled daylight window (sunrise..sunset)
+const SIM_DT      = 0.2;             // simulation step (hours)
+const SIM_MAX_H   = 24 * 7;          // give up after a week
 
-// --- element refs ---
 const els = {
   capacity: document.getElementById('capacity'),
   charge:   document.getElementById('charge'),
   array:    document.getElementById('array'),
   eff:      document.getElementById('eff'),
+  load:     document.getElementById('load'),
   location: document.getElementById('location'),
   customPsh:document.getElementById('customPsh'),
   customPshField: document.getElementById('customPshField'),
   rate:     document.getElementById('rate'),
 };
 
-// --- formatting helpers ---
 const fmt = (n, d = 1) => n.toLocaleString(undefined, { minimumFractionDigits: d, maximumFractionDigits: d });
 
 function currentPSH() {
@@ -481,91 +529,199 @@ function currentPSH() {
   return parseFloat(els.location.value);
 }
 
+// --- Instantaneous solar power delivered to the system at time-of-day h (0 = sunrise) ---
+// Bell-shaped (half-sine) production scaled so the daily integral equals effPower * PSH.
+function solarPower(hourOfDay, effPower, psh) {
+  if (hourOfDay < 0 || hourOfDay > DAYLIGHT_H) return 0;
+  const dailyEnergy = effPower * psh;                       // kWh delivered per day (pre-load)
+  const peak = dailyEnergy * Math.PI / (2 * DAYLIGHT_H);    // amplitude of the half-sine
+  return peak * Math.sin(Math.PI * hourOfDay / DAYLIGHT_H);
+}
+
+// --- Step the battery through simulated solar days until full (or we give up) ---
+function simulate(capacity, startKwh, effPower, load, psh) {
+  const pts = [{ t: 0, soc: startKwh }];
+  let soc = startKwh, fullAt = null, activeHours = 0;
+
+  for (let t = SIM_DT; t <= SIM_MAX_H; t += SIM_DT) {
+    const hod = t % 24;                                     // hour of day, t=0 is sunrise
+    const net = Math.max(0, solarPower(hod, effPower, psh) - load);
+    if (net > 0) activeHours += SIM_DT;
+    soc = Math.min(capacity, soc + net * SIM_DT);
+    pts.push({ t, soc });
+    if (fullAt === null && soc >= capacity - 1e-6) { fullAt = t; break; }
+  }
+  return { pts, fullAt, activeHours };
+}
+
 function compute() {
-  const capacity = parseFloat(els.capacity.value);   // kWh
-  const charge   = parseFloat(els.charge.value);      // %
-  const array    = parseFloat(els.array.value);       // kW (DC rated)
-  const eff       = parseFloat(els.eff.value) / 100;   // fraction
-  const psh       = currentPSH();                      // peak sun hours / day
-  const rate      = parseFloat(els.rate.value);        // $/kWh
+  const capacity = parseFloat(els.capacity.value);
+  const charge   = parseFloat(els.charge.value);
+  const array    = parseFloat(els.array.value);
+  const eff       = parseFloat(els.eff.value) / 100;
+  const load      = parseFloat(els.load.value);
+  const psh       = currentPSH();
+  const rate      = parseFloat(els.rate.value);
 
-  // Energy still needed to reach 100%
-  const energyNeeded = capacity * (1 - charge / 100);  // kWh
+  const startKwh     = capacity * charge / 100;
+  const energyNeeded = capacity - startKwh;
+  const effPower     = array * eff;
 
-  // Effective charging power = rated array power adjusted for system losses
-  const effPower = array * eff;                        // kW delivered to the battery in full sun
+  const sim = simulate(capacity, startKwh, effPower, load, psh);
 
-  // Hours of *peak* sun required, and equivalent real-world days
-  const peakHoursNeeded = energyNeeded / effPower;     // peak-sun-hours
-  const days            = peakHoursNeeded / psh;        // calendar days of this location's sun
-
-  // Cost & environmental impact of the stored solar energy
   const moneySaved = energyNeeded * rate;
   const co2Saved   = energyNeeded * CO2_PER_KWH;
 
-  // Charge fraction already in the battery (for the ring fill)
-  const chargeFrac = charge / 100;
-
-  return { energyNeeded, peakHoursNeeded, days, moneySaved, co2Saved, chargeFrac, charge };
+  return { capacity, charge, energyNeeded, effPower, load, psh, rate,
+           moneySaved, co2Saved, ...sim };
 }
 
 function render() {
-  // mirror slider values into their labels
+  // mirror slider values
   document.getElementById('capacityV').textContent = fmt(parseFloat(els.capacity.value), 1);
   document.getElementById('chargeV').textContent   = els.charge.value;
   document.getElementById('arrayV').textContent    = fmt(parseFloat(els.array.value), 2).replace(/0$/, '');
   document.getElementById('effV').textContent      = els.eff.value;
+  document.getElementById('loadV').textContent     = fmt(parseFloat(els.load.value), 1);
   document.getElementById('rateV').textContent     = fmt(parseFloat(els.rate.value), 2);
   document.getElementById('pshV').textContent      = fmt(currentPSH(), 1);
   document.getElementById('customPshV').textContent= fmt(parseFloat(els.customPsh.value), 1);
 
   const r = compute();
 
-  // ---- Headline time-to-full ----
-  // Show in hours if under a day's worth, else show in days for readability.
   const bigEl  = document.getElementById('timeBig');
   const unitEl = document.getElementById('timeUnit');
   const subEl  = document.getElementById('timeSub');
+  const equivEl= document.getElementById('equiv');
+  bigEl.classList.remove('warn');
 
   if (r.charge >= 99) {
     bigEl.textContent = '100%';
     unitEl.textContent = 'already full';
     subEl.textContent = 'no charging needed';
-  } else if (r.peakHoursNeeded < 12) {
-    bigEl.textContent = fmt(r.peakHoursNeeded, 1);
-    unitEl.textContent = 'hours to full';
-    subEl.textContent = 'of peak sun';
-  } else {
-    bigEl.textContent = fmt(r.peakHoursNeeded, 0);
-    unitEl.textContent = 'peak-sun hrs to full';
-    subEl.textContent = 'spread across days';
-  }
-
-  // ---- Ring shows how full the battery already is ----
-  const offset = RING_CIRC * (1 - r.chargeFrac);
-  document.getElementById('ringFill').style.strokeDashoffset = offset;
-
-  // ---- Equivalent real-world days ----
-  const equivEl = document.getElementById('equiv');
-  if (r.charge >= 99) {
     equivEl.innerHTML = 'Battery is topped up — soak in the sunshine ☀️';
+  } else if (r.fullAt === null) {
+    bigEl.classList.add('warn');
+    bigEl.textContent = '∞';
+    unitEl.textContent = "won't reach full";
+    subEl.textContent = 'load is too high for this sun';
+    equivEl.innerHTML = 'The house is using solar faster than it can store — <b>lower the load</b> or add panels.';
   } else {
-    const dayLabel = r.days < 1
-      ? `${Math.round(r.days * 24 * 10) / 10} sun-equivalent hours`
-      : `${fmt(r.days, 1)} sunny day${r.days >= 1.05 ? 's' : ''}`;
-    equivEl.innerHTML = `≈ <b>${dayLabel}</b> at this location`;
+    if (r.fullAt <= DAYLIGHT_H) {
+      bigEl.textContent = fmt(r.fullAt, 1);
+      unitEl.textContent = 'hours to full';
+      subEl.textContent = 'within one sunny day';
+    } else {
+      bigEl.textContent = fmt(r.fullAt / 24, 1);
+      unitEl.textContent = 'days to full';
+      subEl.textContent = 'across solar cycles';
+    }
+    equivEl.innerHTML = `≈ <b>${fmt(r.activeHours, 1)} hours</b> of active charging`;
   }
 
-  // ---- Energy / cost / CO2 stats ----
+  // ring shows how full the battery already is
+  document.getElementById('ringFill').style.strokeDashoffset = RING_CIRC * (1 - r.charge / 100);
+
   document.getElementById('kwh').textContent   = fmt(r.energyNeeded, 1);
   document.getElementById('money').textContent = fmt(r.moneySaved, 2);
   document.getElementById('co2').textContent   = fmt(r.co2Saved, 1);
 
-  // paint slider fills
+  drawChart(r);
   paintRanges();
 }
 
-// Subtle gradient fill on the slider track to show position
+// ---- SVG charge-curve chart ----
+let chartAnimated = false;
+function drawChart(r) {
+  const W = 1000, H = 300, padL = 46, padR = 20, padT = 16, padB = 32;
+  const plotW = W - padL - padR, plotH = H - padT - padB;
+  const cap = r.capacity;
+
+  // horizon: a little past full, or the whole week if it never fills
+  const xMax = r.fullAt !== null ? Math.max(r.fullAt * 1.08, SIM_DT) : SIM_MAX_H;
+  const X = t => padL + (t / xMax) * plotW;
+  const Y = pct => padT + (1 - pct / 100) * plotH;
+
+  let svg = '';
+
+  // day / night background bands
+  for (let d = 0; d * 24 < xMax; d++) {
+    const dayStart = d * 24, dayEnd = Math.min(d * 24 + DAYLIGHT_H, xMax);
+    const nightEnd = Math.min(d * 24 + 24, xMax);
+    svg += `<rect x="${X(dayStart).toFixed(1)}" y="${padT}" width="${(X(dayEnd)-X(dayStart)).toFixed(1)}" height="${plotH}" fill="rgba(255,194,75,0.07)"/>`;
+    if (dayEnd < nightEnd)
+      svg += `<rect x="${X(dayEnd).toFixed(1)}" y="${padT}" width="${(X(nightEnd)-X(dayEnd)).toFixed(1)}" height="${plotH}" fill="rgba(99,130,180,0.05)"/>`;
+  }
+
+  // horizontal gridlines + y labels
+  [0, 25, 50, 75, 100].forEach(p => {
+    const y = Y(p).toFixed(1);
+    svg += `<line x1="${padL}" y1="${y}" x2="${W-padR}" y2="${y}" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>`;
+    svg += `<text x="${padL-10}" y="${(Y(p)+4).toFixed(1)}" fill="#64748b" font-size="12" text-anchor="end">${p}%</text>`;
+  });
+
+  // x labels (per day, or hours if it fills within a day)
+  if (xMax <= DAYLIGHT_H * 1.2) {
+    for (let h = 0; h <= xMax; h += 2) {
+      svg += `<text x="${X(h).toFixed(1)}" y="${H-10}" fill="#64748b" font-size="11" text-anchor="middle">${h}h</text>`;
+    }
+  } else {
+    for (let d = 0; d * 24 < xMax; d++) {
+      svg += `<text x="${X(d*24 + 6).toFixed(1)}" y="${H-10}" fill="#64748b" font-size="11" text-anchor="middle">Day ${d+1}</text>`;
+    }
+  }
+
+  // build the SoC line + area
+  let line = '', area = `M ${padL} ${Y(0).toFixed(1)} `;
+  r.pts.forEach((p, i) => {
+    const x = X(p.t).toFixed(1), y = Y(p.soc / cap * 100).toFixed(1);
+    line += (i === 0 ? `M ${x} ${y}` : ` L ${x} ${y}`);
+    area += `L ${x} ${y} `;
+  });
+  const lastX = X(r.pts[r.pts.length - 1].t).toFixed(1);
+  area += `L ${lastX} ${Y(0).toFixed(1)} Z`;
+
+  svg += `
+    <defs>
+      <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="rgba(255,194,75,0.40)"/>
+        <stop offset="100%" stop-color="rgba(255,194,75,0.02)"/>
+      </linearGradient>
+      <linearGradient id="lineGrad" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0%" stop-color="#ffc24b"/>
+        <stop offset="100%" stop-color="#ff9f1c"/>
+      </linearGradient>
+    </defs>
+    <path d="${area}" fill="url(#areaGrad)"/>
+    <path id="socLine" d="${line}" fill="none" stroke="url(#lineGrad)" stroke-width="3"
+          stroke-linejoin="round" stroke-linecap="round" style="filter:drop-shadow(0 2px 6px rgba(255,159,28,.35))"/>`;
+
+  // marker at the full point
+  if (r.fullAt !== null && r.charge < 99) {
+    const fx = X(r.fullAt).toFixed(1), fy = Y(100).toFixed(1);
+    svg += `<circle cx="${fx}" cy="${fy}" r="5.5" fill="#fff" stroke="#ff9f1c" stroke-width="2.5"/>`;
+    const anchor = r.fullAt / xMax > 0.85 ? 'end' : 'start';
+    const dx = anchor === 'end' ? -10 : 10;
+    svg += `<text x="${(parseFloat(fx)+dx).toFixed(1)}" y="${(parseFloat(fy)+5).toFixed(1)}" fill="#ffd57a" font-size="12.5" font-weight="700" text-anchor="${anchor}">Full ✓</text>`;
+  }
+
+  const chart = document.getElementById('chart');
+  chart.innerHTML = svg;
+
+  // draw-in animation, once
+  const path = document.getElementById('socLine');
+  if (path && !chartAnimated) {
+    const len = path.getTotalLength();
+    path.style.transition = 'none';
+    path.style.strokeDasharray = len;
+    path.style.strokeDashoffset = len;
+    path.getBoundingClientRect();           // force reflow
+    path.style.transition = 'stroke-dashoffset 1.1s ease';
+    path.style.strokeDashoffset = 0;
+    chartAnimated = true;
+  }
+}
+
 function paintRanges() {
   document.querySelectorAll('input[type="range"]').forEach(el => {
     const min = parseFloat(el.min), max = parseFloat(el.max);
@@ -575,7 +731,6 @@ function paintRanges() {
   });
 }
 
-// --- wire up listeners ---
 Object.values(els).forEach(el => {
   if (el && el.tagName) el.addEventListener('input', render);
 });
@@ -585,7 +740,6 @@ els.location.addEventListener('change', () => {
   render();
 });
 
-// initial paint
 render();
 </script>
 </body>
