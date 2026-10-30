@@ -1,0 +1,22 @@
+{
+  "zip": "01778",
+  "max_miles": 25,
+  "want": {
+    "storage": ["256GB", "512GB"],
+    "colors": ["Star White", "Night Sky"],
+    "carriers": ["Verizon"]
+  },
+  "parts": {},
+  "buy_url": "https://www.apple.com/shop/buy-iphone/iphone-duo",
+  "interval_seconds": 12,
+  "jitter_seconds": 3,
+  "max_backoff_seconds": 300,
+  "realert_minutes": 3,
+  "ntfy_topic": "",
+  "ntfy_server": "https://ntfy.sh",
+  "open_browser": true,
+  "sound": true,
+  "speak": true,
+  "heartbeat_hours": 4,
+  "http_client": "auto"
+}
