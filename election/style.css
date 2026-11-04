@@ -16,6 +16,7 @@
   --none: #232c40;
   --stroke: #0c1220;
   --radius: 14px;
+  color-scheme: dark;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html, body { height: 100%; }

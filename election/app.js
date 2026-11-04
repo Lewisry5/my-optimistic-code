@@ -701,7 +701,7 @@
     if (['results', 'holders'].includes(p.get('mode'))) S.mode = p.get('mode');
   }
   function writeHash() {
-    history.replaceState(null, '', `#office=${S.office}&mode=${S.mode}`);
+    try { history.replaceState(null, '', `#office=${S.office}&mode=${S.mode}`); } catch (e) { /* sandboxed viewers may refuse */ }
     renderNotes();
   }
 
