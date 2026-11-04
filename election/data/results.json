@@ -1,0 +1,1949 @@
+{
+ "election": "2026-11-03",
+ "updated": "2026-11-04T03:11:09Z",
+ "notes": "Compiled from web-search snapshots on election night (results through roughly 10 p.m. ET Nov 3). Most counts are partial; reportingPct is the source's % of expected vote (or towns reporting for RI). Called races: governors CT, MA, RI; U.S. Senate MA, NH, RI; all U.S. House seats in RI, NH, VT, ME-1 plus MA-1/2/5/7; RI LG/AG/SOS/Treasurer; VT LG (Gray flips it). Uncalled/close: NH governor (lead flipped during count), Maine U.S. Senate, Maine governor and ME-2 (early leads), VT governor (Scott leading). No state legislative chamber totals or county-level results were available yet; chamber entries show pre-election composition only.",
+ "races": [
+  {
+   "id": "NH-gov",
+   "office": "gov",
+   "st": "NH",
+   "district": null,
+   "candidates": [
+    {
+     "name": "Kelly Ayotte",
+     "party": "R",
+     "votes": 189359,
+     "pct": 49.9,
+     "incumbent": true
+    },
+    {
+     "name": "Cinde Warmington",
+     "party": "D",
+     "votes": 182245,
+     "pct": 48.0
+    },
+    {
+     "name": "Stephen Villee",
+     "party": "L",
+     "pct": 2.1
+    }
+   ],
+   "called": false,
+   "status": "too-close",
+   "sources": [
+    "https://www.nbcboston.com/elections/2026-midterm-voting-live-updates-mass-nh-maine/4038516/",
+    "https://www.nbcnews.com/politics/2026-elections/new-hampshire-governor-results",
+    "https://www.nhpr.org/live-updates/election-day-live-blog-newhampshire-voting-2026"
+   ],
+   "reportingPct": 55.1,
+   "asOf": "2026-11-03 election night (ET), NBC snapshot at 55.1% expected vote",
+   "note": "Lead has flipped during the count: NHPR/AP at 34% had Warmington 118,720 to Ayotte 116,187. NBC: too early to call."
+  },
+  {
+   "id": "ME-gov",
+   "office": "gov",
+   "st": "ME",
+   "district": null,
+   "candidates": [
+    {
+     "name": "Hannah Pingree",
+     "party": "D",
+     "pct": 51
+    },
+    {
+     "name": "Bobby Charles",
+     "party": "R",
+     "pct": 41
+    },
+    {
+     "name": "Rick Bennett",
+     "party": "I"
+    }
+   ],
+   "called": false,
+   "status": "leading",
+   "sources": [
+    "https://www.pressherald.com/2026/11/03/polls-open-across-maine-on-election-day/",
+    "https://www.pressherald.com/2026/11/03/hannah-pingree-is-favored-in-the-maine-governors-race-now-results-are-coming-in/",
+    "https://www.nbcnews.com/politics/2026-elections/governor-results"
+   ],
+   "reportingPct": 12,
+   "asOf": "2026-11-03 election night (ET), Press Herald live blog at 12% counted",
+   "note": "Open seat (Mills term-limited). Plurality wins (no RCV for governor). NBC table at 9.9% expected: Pingree 50.6, Charles 41.5."
+  },
+  {
+   "id": "MA-gov",
+   "office": "gov",
+   "st": "MA",
+   "district": null,
+   "candidates": [
+    {
+     "name": "Maura Healey",
+     "party": "D",
+     "pct": 68.6,
+     "incumbent": true,
+     "winner": true
+    },
+    {
+     "name": "Mike Minogue",
+     "party": "R",
+     "pct": 27.8
+    },
+    {
+     "name": "Andrea James",
+     "party": "I",
+     "pct": 3.6
+    }
+   ],
+   "called": true,
+   "status": "called",
+   "sources": [
+    "https://www.wbur.org/news/2026/11/03/massachusetts-healey-governor-race-election-result",
+    "https://www.boston.com/news/local-news/2026/11/03/maura-healey-mike-minogue-massachusetts-governor/",
+    "https://www.nbcnews.com/politics/2026-elections/massachusetts-governor-results"
+   ],
+   "reportingPct": 11.8,
+   "calledBy": "AP",
+   "asOf": "2026-11-03 election night (ET), NBC percentages at 11.8% expected vote",
+   "note": "AP called one minute after polls closed."
+  },
+  {
+   "id": "CT-gov",
+   "office": "gov",
+   "st": "CT",
+   "district": null,
+   "candidates": [
+    {
+     "name": "Ned Lamont",
+     "party": "D",
+     "votes": 134174,
+     "pct": 60.8,
+     "incumbent": true,
+     "winner": true
+    },
+    {
+     "name": "Ryan Fazio",
+     "party": "R",
+     "votes": 86625,
+     "pct": 39.2
+    }
+   ],
+   "called": true,
+   "status": "called",
+   "sources": [
+    "https://www.nbcconnecticut.com/elections/connecticut-midterm-election-results-2026/3787258/",
+    "https://www.wfsb.com/2026/11/03/lamont-fazio-face-off-connecticut-governors-race/",
+    "https://ctnewsjunkie.com/2026/11/03/ct-election-governor-lamont-fazio/"
+   ],
+   "reportingPct": 17,
+   "calledBy": "AP",
+   "asOf": "2026-11-03 election night (ET), NBC Connecticut at 17% expected vote",
+   "note": "AP called just after 9:15 p.m. ET with <7% counted."
+  },
+  {
+   "id": "RI-gov",
+   "office": "gov",
+   "st": "RI",
+   "district": null,
+   "candidates": [
+    {
+     "name": "Helena Foulkes",
+     "party": "D",
+     "votes": 181680,
+     "pct": 57.48,
+     "winner": true
+    },
+    {
+     "name": "Ken Block",
+     "party": "I",
+     "votes": 87763,
+     "pct": 27.77
+    },
+    {
+     "name": "Aaron Guckian",
+     "party": "R",
+     "votes": 42318,
+     "pct": 13.39
+    },
+    {
+     "name": "C. D. Reynolds",
+     "party": "I"
+    },
+    {
+     "name": "Jasjit Gotra",
+     "party": "O"
+    }
+   ],
+   "called": true,
+   "status": "called",
+   "sources": [
+    "https://electionresults.ri.gov/results/public/RhodeIsland/elections/2026StatewideGeneralElection",
+    "https://rhodeislandcurrent.com/2026/11/03/foulkes-defeats-block-and-guckian-to-win-governors-race/",
+    "https://www.bostonglobe.com/2026/11/03/metro/foulkes-defeats-block-guckian-rhode-island-governor-race/"
+   ],
+   "reportingPct": 100,
+   "calledBy": "AP",
+   "asOf": "2026-11-03 election night (ET), RI Board of Elections unofficial, 39/39 cities & towns reporting",
+   "note": "Open seat in effect: incumbent McKee lost the Sept. Democratic primary to Foulkes. Block and Guckian conceded. 'reportingPct' = 39/39 towns; mail ballots may still be added. Party for Gotra not confirmed."
+  },
+  {
+   "id": "VT-gov",
+   "office": "gov",
+   "st": "VT",
+   "district": null,
+   "candidates": [
+    {
+     "name": "Phil Scott",
+     "party": "R",
+     "pct": 52.9,
+     "incumbent": true
+    },
+    {
+     "name": "Amanda Janoo",
+     "party": "D",
+     "pct": 45.4
+    },
+    {
+     "name": "Brian Judd",
+     "party": "I"
+    },
+    {
+     "name": "Dean Roy",
+     "party": "O"
+    },
+    {
+     "name": "June Goodband",
+     "party": "O"
+    }
+   ],
+   "called": false,
+   "status": "leading",
+   "sources": [
+    "https://www.nbcnews.com/politics/2026-elections/vermont-governor-results",
+    "https://www.poliwave.com/us/live/midterms-2026/vermont",
+    "https://www.nbcnews.com/politics/2026-elections/governor-results"
+   ],
+   "reportingPct": 72.2,
+   "asOf": "2026-11-03 election night (ET), NBC at 72.2% expected vote",
+   "note": "Earlier NBC snapshot at 61.2%: Scott 102,437 (52.8%), Janoo 88,140 (45.4%). Poliwave: Scott 108,244, Janoo 92,021, Judd ~0.8%. Not called. Roy = Freedom and Unity, Goodband = Green Mountain Peace & Justice."
+  },
+  {
+   "id": "MA-ltgov",
+   "office": "ltgov",
+   "st": "MA",
+   "district": null,
+   "candidates": [
+    {
+     "name": "Kim Driscoll",
+     "party": "D",
+     "incumbent": true,
+     "winner": true
+    }
+   ],
+   "called": true,
+   "status": "called",
+   "sources": [
+    "https://www.multistate.us/elections/results/massachusetts-2026",
+    "https://www.wbur.org/news/2026/11/03/massachusetts-healey-governor-race-election-result"
+   ],
+   "calledBy": "AP (joint ticket with Healey)",
+   "asOf": "2026-11-03 election night (ET)",
+   "note": "Governor/Lt. Governor elected on a joint ticket; MultiState lists Driscoll as winner. Republican running mate not captured."
+  },
+  {
+   "id": "CT-ltgov",
+   "office": "ltgov",
+   "st": "CT",
+   "district": null,
+   "candidates": [
+    {
+     "name": "Susan Bysiewicz",
+     "party": "D",
+     "incumbent": true,
+     "winner": true
+    },
+    {
+     "name": "Matthew Corey",
+     "party": "R"
+    }
+   ],
+   "called": true,
+   "status": "called",
+   "sources": [
+    "https://www.multistate.us/elections/results/connecticut-2026",
+    "https://www.wfsb.com/2026/11/03/lamont-fazio-face-off-connecticut-governors-race/"
+   ],
+   "calledBy": "AP (joint ticket with Lamont)",
+   "asOf": "2026-11-03 election night (ET)",
+   "note": "Joint ticket with governor; MultiState lists Bysiewicz as winner."
+  },
+  {
+   "id": "RI-ltgov",
+   "office": "ltgov",
+   "st": "RI",
+   "district": null,
+   "candidates": [
+    {
+     "name": "Sabina Matos",
+     "party": "D",
+     "votes": 185483,
+     "pct": 59.21,
+     "incumbent": true,
+     "winner": true
+    },
+    {
+     "name": "John Loughlin II",
+     "party": "R",
+     "votes": 126871,
+     "pct": 40.5
+    }
+   ],
+   "called": true,
+   "status": "called",
+   "sources": [
+    "https://electionresults.ri.gov/results/public/RhodeIsland/elections/2026StatewideGeneralElection",
+    "https://turnto10.com/news/local/rhode-island-general-election-governor-lieutenant-attorney-general-treasurer-republican-democrat-independent-november-3-2026"
+   ],
+   "reportingPct": 100,
+   "calledBy": "Concession (Turn to 10)",
+   "asOf": "2026-11-03 election night (ET), RI Board of Elections unofficial, 39/39 cities & towns",
+   "note": "Loughlin conceded per Turn to 10."
+  },
+  {
+   "id": "VT-ltgov",
+   "office": "ltgov",
+   "st": "VT",
+   "district": null,
+   "candidates": [
+    {
+     "name": "Molly Gray",
+     "party": "D",
+     "pct": 62.4,
+     "winner": true
+    },
+    {
+     "name": "John Rodgers",
+     "party": "R",
+     "pct": 37.4,
+     "incumbent": true
+    }
+   ],
+   "called": true,
+   "status": "called",
+   "sources": [
+    "https://vtdigger.org/2026/11/03/molly-gray-elected-as-vermonts-next-lieutenant-governor/",
+    "https://www.wcax.com/2026/11/04/gray-wins-back-vermont-lieutenant-governor-job/"
+   ],
+   "calledBy": "Concession / VTDigger, WCAX",
+   "asOf": "2026-11-03 election night (ET), VTDigger count at ~9:30 p.m. when Rodgers conceded",
+   "note": "Democratic flip; Rodgers conceded ~9:30 p.m."
+  },
+  {
+   "id": "CT-ag",
+   "office": "ag",
+   "st": "CT",
+   "district": null,
+   "candidates": [
+    {
+     "name": "William Tong",
+     "party": "D",
+     "pct": 66.1,
+     "incumbent": true
+    },
+    {
+     "name": "John Bolton",
+     "party": "R",
+     "pct": 33.9
+    }
+   ],
+   "called": false,
+   "status": "leading",
+   "sources": [
+    "https://www.nbcconnecticut.com/elections/connecticut-attorney-general-election-results-tong-bolton/3788791/",
+    "https://www.nbcconnecticut.com/elections/connecticut-midterm-election-results-2026/3787258/"
+   ],
+   "reportingPct": 6.4,
+   "asOf": "2026-11-03 election night (ET), NBC at 6.4% expected vote",
+   "note": "Earlier NBC at 4.4%: Tong 40,133 (71.9%), Bolton 15,648 (28.1%). Too early to call."
+  },
+  {
+   "id": "MA-ag",
+   "office": "ag",
+   "st": "MA",
+   "district": null,
+   "candidates": [
+    {
+     "name": "Andrea Joy Campbell",
+     "party": "D",
+     "pct": 72.3,
+     "incumbent": true
+    },
+    {
+     "name": "Michael Walsh",
+     "party": "R",
+     "pct": 27.7
+    }
+   ],
+   "called": false,
+   "status": "leading",
+   "sources": [
+    "https://www.nbcnews.com/politics/2026-elections/massachusetts-attorney-general-results"
+   ],
+   "reportingPct": 11.6,
+   "asOf": "2026-11-03 election night (ET), NBC at 11.6% expected vote",
+   "note": "Too early to call at snapshot."
+  },
+  {
+   "id": "RI-ag",
+   "office": "ag",
+   "st": "RI",
+   "district": null,
+   "candidates": [
+    {
+     "name": "Kimberly Ahern",
+     "party": "D",
+     "votes": 204927,
+     "pct": 66.08,
+     "winner": true
+    },
+    {
+     "name": "Alan Leonard Gordon",
+     "party": "R",
+     "votes": 104372,
+     "pct": 33.66
+    }
+   ],
+   "called": true,
+   "status": "called",
+   "sources": [
+    "https://electionresults.ri.gov/results/public/RhodeIsland/elections/2026StatewideGeneralElection",
+    "https://www.bostonglobe.com/2026/11/03/metro/ri-attorney-general-race-kim-ahern-wins-first-lgbtq-state-office/",
+    "https://turnto10.com/news/local/rhode-island-general-election-governor-lieutenant-attorney-general-treasurer-republican-democrat-independent-november-3-2026"
+   ],
+   "reportingPct": 100,
+   "calledBy": "Turn to 10 / Boston Globe",
+   "asOf": "2026-11-03 election night (ET), RI Board of Elections unofficial, 39/39 cities & towns",
+   "note": "Open seat (Neronha term-limited)."
+  },
+  {
+   "id": "VT-ag",
+   "office": "ag",
+   "st": "VT",
+   "district": null,
+   "candidates": [
+    {
+     "name": "Charity Clark",
+     "party": "D",
+     "pct": 67.2,
+     "incumbent": true
+    },
+    {
+     "name": "Edwin Kemon",
+     "party": "R",
+     "pct": 32.6
+    }
+   ],
+   "called": false,
+   "status": "leading",
+   "sources": [
+    "https://www.nbcnews.com/politics/2026-elections/attorney-general-results",
+    "https://www.multistate.us/elections/results/vermont-2026"
+   ],
+   "asOf": "2026-11-03 election night (ET), NBC national AG table (reporting % not captured)",
+   "note": "Not called at snapshot."
+  },
+  {
+   "id": "CT-sos",
+   "office": "sos",
+   "st": "CT",
+   "district": null,
+   "candidates": [
+    {
+     "name": "Stephanie Thomas",
+     "party": "D",
+     "pct": 64.7,
+     "incumbent": true
+    },
+    {
+     "name": "Peter Lumaj",
+     "party": "R",
+     "pct": 35.3
+    }
+   ],
+   "called": false,
+   "status": "leading",
+   "sources": [
+    "https://www.nbcnews.com/politics/2026-elections/secretary-of-state-results"
+   ],
+   "reportingPct": 9.8,
+   "asOf": "2026-11-03 election night (ET), NBC at 9.8% expected vote"
+  },
+  {
+   "id": "MA-sos",
+   "office": "sos",
+   "st": "MA",
+   "district": null,
+   "candidates": [
+    {
+     "name": "William Galvin",
+     "party": "D",
+     "pct": 79.4,
+     "incumbent": true
+    },
+    {
+     "name": "Anne Brensley",
+     "party": "R",
+     "pct": 20.6
+    }
+   ],
+   "called": false,
+   "status": "leading",
+   "sources": [
+    "https://www.nbcnews.com/politics/2026-elections/secretary-of-state-results"
+   ],
+   "reportingPct": 7.8,
+   "asOf": "2026-11-03 election night (ET), NBC at 7.8% expected vote"
+  },
+  {
+   "id": "RI-sos",
+   "office": "sos",
+   "st": "RI",
+   "district": null,
+   "candidates": [
+    {
+     "name": "Gregg Amore",
+     "party": "D",
+     "incumbent": true,
+     "winner": true
+    }
+   ],
+   "called": true,
+   "status": "called",
+   "sources": [
+    "https://rhodeislandcurrent.com/2026/11/03/another-four-years-as-secretary-of-state-for-gregg-amore/"
+   ],
+   "calledBy": "Unopposed (Rhode Island Current)",
+   "asOf": "2026-11-03 election night (ET)",
+   "note": "Unopposed; 'nearly 117,000 votes' plus ~5,700 write-ins per preliminary Board of Elections results."
+  },
+  {
+   "id": "VT-sos",
+   "office": "sos",
+   "st": "VT",
+   "district": null,
+   "candidates": [
+    {
+     "name": "Sarah Copeland Hanzas",
+     "party": "D",
+     "pct": 58.8,
+     "incumbent": true
+    },
+    {
+     "name": "H. Brooke Paige",
+     "party": "R",
+     "pct": 33.2
+    },
+    {
+     "name": "Rachel Shaw",
+     "party": "P"
+    }
+   ],
+   "called": false,
+   "status": "leading",
+   "sources": [
+    "https://www.nbcnews.com/politics/2026-elections/secretary-of-state-results"
+   ],
+   "reportingPct": 66.3,
+   "asOf": "2026-11-03 election night (ET), NBC at 66.3% expected vote"
+  },
+  {
+   "id": "CT-treas",
+   "office": "treas",
+   "st": "CT",
+   "district": null,
+   "candidates": [
+    {
+     "name": "Erick Russell",
+     "party": "D",
+     "pct": 69.3,
+     "incumbent": true
+    },
+    {
+     "name": "Fred Wilms",
+     "party": "R",
+     "pct": 30.7
+    }
+   ],
+   "called": false,
+   "status": "leading",
+   "sources": [
+    "https://www.nbcconnecticut.com/elections/connecticut-midterm-election-results-2026/3787258/"
+   ],
+   "reportingPct": 4,
+   "asOf": "2026-11-03 election night (ET), NBC CT at ~4% expected vote"
+  },
+  {
+   "id": "MA-treas",
+   "office": "treas",
+   "st": "MA",
+   "district": null,
+   "candidates": [
+    {
+     "name": "Deborah Goldberg",
+     "party": "D",
+     "incumbent": true
+    },
+    {
+     "name": "Elizabeth Dionne",
+     "party": "R"
+    }
+   ],
+   "called": false,
+   "status": "no-data",
+   "sources": [
+    "https://www.multistate.us/elections/results/massachusetts-2026",
+    "https://www.boston25news.com/news/local/2026-mass-midterm-election-results-live-vote-counts-races-ag-auditor-treasurer/XNG5J5MH3RDYNPLQ22AECO6UBI/"
+   ]
+  },
+  {
+   "id": "RI-treas",
+   "office": "treas",
+   "st": "RI",
+   "district": null,
+   "candidates": [
+    {
+     "name": "James Diossa",
+     "party": "D",
+     "pct": 65,
+     "incumbent": true,
+     "winner": true
+    },
+    {
+     "name": "Micholas Credle",
+     "party": "R",
+     "pct": 35
+    }
+   ],
+   "called": true,
+   "status": "called",
+   "sources": [
+    "https://rhodeislandcurrent.com/2026/11/03/diossa-secures-reelection-as-rhode-island-general-treasurer/",
+    "https://www.bostonglobe.com/2026/11/03/metro/ri-attorney-general-race-kim-ahern-wins-first-lgbtq-state-office/"
+   ],
+   "calledBy": "Boston Globe / Rhode Island Current",
+   "asOf": "2026-11-03 9:13 p.m. ET, unofficial, 39 cities & towns reporting"
+  },
+  {
+   "id": "VT-treas",
+   "office": "treas",
+   "st": "VT",
+   "district": null,
+   "candidates": [
+    {
+     "name": "Mike Pieciak",
+     "party": "D",
+     "incumbent": true
+    },
+    {
+     "name": "Lynn Lafleur",
+     "party": "R"
+    },
+    {
+     "name": "Zachary Hampl",
+     "party": "P"
+    }
+   ],
+   "called": false,
+   "status": "no-data",
+   "sources": [
+    "https://www.multistate.us/elections/results/vermont-2026",
+    "https://woodburyvt.org/2026/11/03/woodbury-election-results/"
+   ],
+   "note": "Only town-level (Woodbury) numbers seen."
+  },
+  {
+   "id": "MA-auditor",
+   "office": "auditor",
+   "st": "MA",
+   "district": null,
+   "candidates": [
+    {
+     "name": "Diana DiZoglio",
+     "party": "D",
+     "incumbent": true
+    },
+    {
+     "name": "Al Ozonoff",
+     "party": "L"
+    }
+   ],
+   "called": false,
+   "status": "no-data",
+   "sources": [
+    "https://www.multistate.us/elections/results/massachusetts-2026"
+   ]
+  },
+  {
+   "id": "VT-auditor",
+   "office": "auditor",
+   "st": "VT",
+   "district": null,
+   "candidates": [
+    {
+     "name": "Tim Ashe",
+     "party": "D"
+    },
+    {
+     "name": "Ivar Kronick",
+     "party": "R"
+    }
+   ],
+   "called": false,
+   "status": "no-data",
+   "sources": [
+    "https://www.multistate.us/elections/results/vermont-2026"
+   ]
+  },
+  {
+   "id": "CT-comptroller",
+   "office": "comptroller",
+   "st": "CT",
+   "district": null,
+   "candidates": [
+    {
+     "name": "Sean Scanlon",
+     "party": "D",
+     "pct": 71.5,
+     "incumbent": true
+    },
+    {
+     "name": "Jennifer Tooker",
+     "party": "R"
+    }
+   ],
+   "called": false,
+   "status": "leading",
+   "sources": [
+    "https://www.nbcconnecticut.com/elections/connecticut-midterm-election-results-2026/3787258/",
+    "https://www.multistate.us/elections/results/connecticut-2026"
+   ],
+   "reportingPct": 4,
+   "asOf": "2026-11-03 election night (ET), NBC CT at ~4% expected vote"
+  },
+  {
+   "id": "ME-ussen",
+   "office": "ussen",
+   "st": "ME",
+   "district": null,
+   "candidates": [
+    {
+     "name": "Troy Jackson",
+     "party": "D",
+     "votes": 67904,
+     "pct": 51
+    },
+    {
+     "name": "Susan Collins",
+     "party": "R",
+     "votes": 65811,
+     "pct": 49,
+     "incumbent": true
+    }
+   ],
+   "called": false,
+   "status": "too-close",
+   "sources": [
+    "https://abcnews.com/Politics/maine-2026-live-midterm-election-results/story?id=136761571",
+    "https://votes.decisiondeskhq.com/races/2026-11-03/maine-us-senate-general-election",
+    "https://www.pressherald.com/2026/11/03/polls-open-across-maine-on-election-day/"
+   ],
+   "reportingPct": 17,
+   "asOf": "2026-11-03 election night (ET), ABC at 17% expected vote",
+   "note": "Jackson replaced Graham Platner (withdrew July 10). A DDHQ snapshot of unknown time showed Collins 49.73% / Jackson 49.65%. RCV applies if no one tops 50% (six declared write-ins)."
+  },
+  {
+   "id": "NH-ussen",
+   "office": "ussen",
+   "st": "NH",
+   "district": null,
+   "candidates": [
+    {
+     "name": "Chris Pappas",
+     "party": "D",
+     "votes": 99238,
+     "pct": 59.8,
+     "winner": true
+    },
+    {
+     "name": "John E. Sununu",
+     "party": "R",
+     "votes": 63606,
+     "pct": 38.3
+    }
+   ],
+   "called": true,
+   "status": "called",
+   "sources": [
+    "https://www.nhpr.org/nh-news/2026-11-03/pappas-wins-u-s-senate-race-defeating-sununu-in-marquee-matchup",
+    "https://www.axios.com/2026/11/04/new-hampshire-nh-senate-results-sununu-pappas",
+    "https://newhampshirebulletin.com/2026/11/03/pappas-defeats-sununu-in-pivotal-u-s-senate-race/"
+   ],
+   "reportingPct": 23,
+   "calledBy": "AP",
+   "asOf": "2026-11-03 election night (ET), AP at 23% counted",
+   "note": "Open seat (Shaheen retiring). AP call 8:20 p.m.; Sununu conceded."
+  },
+  {
+   "id": "MA-ussen",
+   "office": "ussen",
+   "st": "MA",
+   "district": null,
+   "candidates": [
+    {
+     "name": "Ed Markey",
+     "party": "D",
+     "incumbent": true,
+     "winner": true
+    },
+    {
+     "name": "John Deaton",
+     "party": "R"
+    }
+   ],
+   "called": true,
+   "status": "called",
+   "sources": [
+    "https://www.wbur.org/news/2026/11/03/massachusetts-markey-senate-election-result",
+    "https://www.bostonglobe.com/2026/11/03/metro/massachusetts-election-results-markey-senate/"
+   ],
+   "calledBy": "AP",
+   "asOf": "2026-11-03 election night (ET)",
+   "note": "AP call 8:01 p.m.; Deaton conceded."
+  },
+  {
+   "id": "RI-ussen",
+   "office": "ussen",
+   "st": "RI",
+   "district": null,
+   "candidates": [
+    {
+     "name": "Jack Reed",
+     "party": "D",
+     "incumbent": true,
+     "winner": true
+    },
+    {
+     "name": "Ray McKay",
+     "party": "R"
+    },
+    {
+     "name": "Michael Bahry",
+     "party": "I"
+    }
+   ],
+   "called": true,
+   "status": "called",
+   "sources": [
+    "https://www.wpri.com/news/elections/jack-reed-wins-6th-term-in-us-senate/",
+    "https://rhodeislandcurrent.com/2026/11/03/prewrite-jack-reed-wins-sixth-term-in-us-senate/"
+   ],
+   "calledBy": "AP",
+   "asOf": "2026-11-03 election night (ET)",
+   "note": "AP call 8:01 p.m. (at <1% counted AP had Reed 58, McKay 38, Bahry 4)."
+  },
+  {
+   "id": "ME-ushouse-1",
+   "office": "ushouse",
+   "st": "ME",
+   "district": "1",
+   "candidates": [
+    {
+     "name": "Chellie Pingree",
+     "party": "D",
+     "pct": 89.39,
+     "incumbent": true,
+     "winner": true
+    },
+    {
+     "name": "Ron Russell",
+     "party": "R",
+     "pct": 10.61
+    }
+   ],
+   "called": true,
+   "status": "called",
+   "sources": [
+    "https://www.bangordailynews.com/2026/11/03/politics/elections/chellie-pingree-wins-10th-term-maine-1st-district/",
+    "https://mainemorningstar.com/2026/11/03/pingree-defeats-russell-in-1st-district-rematch/",
+    "https://sg.news.yahoo.com/ap-race-call-democrat-chellie-054549577.html"
+   ],
+   "calledBy": "Decision Desk HQ / AP",
+   "asOf": "2026-11-03 election night (ET), early returns"
+  },
+  {
+   "id": "ME-ushouse-2",
+   "office": "ushouse",
+   "st": "ME",
+   "district": "2",
+   "candidates": [
+    {
+     "name": "Paul LePage",
+     "party": "R",
+     "pct": 54.5
+    },
+    {
+     "name": "Matt Dunlap",
+     "party": "D",
+     "pct": 45.5
+    }
+   ],
+   "called": false,
+   "status": "leading",
+   "sources": [
+    "https://www.nbcnews.com/politics/2026-elections/maine-us-house-district-2-results",
+    "https://www.pressherald.com/2026/11/03/paul-lepage-matt-dunlap-race-too-close-to-call-in-maines-2nd-congressional-district-2/"
+   ],
+   "reportingPct": 17,
+   "asOf": "2026-11-03 election night (ET), NBC at ~17% expected vote",
+   "note": "Open seat (Golden retired). Earlier NBC at ~15%: LePage 38,654 (53.7%), Dunlap 33,339 (46.3%)."
+  },
+  {
+   "id": "NH-ushouse-1",
+   "office": "ushouse",
+   "st": "NH",
+   "district": "1",
+   "candidates": [
+    {
+     "name": "Stefany Shaheen",
+     "party": "D",
+     "winner": true
+    },
+    {
+     "name": "Anthony DiLorenzo",
+     "party": "R"
+    }
+   ],
+   "called": true,
+   "status": "called",
+   "sources": [
+    "https://www.nhpr.org/live-updates/election-day-live-blog-newhampshire-voting-2026",
+    "https://www.concordmonitor.com/2026/11/03/goodlander-re-elected-shaheen-takes-congressional-seat-to-keep-delegation-all-democratic/",
+    "https://www.nbcnews.com/politics/2026-elections/new-hampshire-us-house-district-1-results"
+   ],
+   "reportingPct": 47.9,
+   "calledBy": "NHPR / Concord Monitor",
+   "asOf": "2026-11-03 election night (ET)",
+   "note": "Open seat (Pappas ran for Senate). NBC at 47.9% (168,375 votes) showed roughly 59%-41%; exact figures not captured."
+  },
+  {
+   "id": "NH-ushouse-2",
+   "office": "ushouse",
+   "st": "NH",
+   "district": "2",
+   "candidates": [
+    {
+     "name": "Maggie Goodlander",
+     "party": "D",
+     "pct": 62,
+     "incumbent": true,
+     "winner": true
+    },
+    {
+     "name": "Lily Tang Williams",
+     "party": "R",
+     "pct": 35
+    },
+    {
+     "name": "Robbie Mahrou",
+     "party": "I",
+     "pct": 2
+    }
+   ],
+   "called": true,
+   "status": "called",
+   "sources": [
+    "https://www.concordmonitor.com/2026/11/03/goodlander-re-elected-shaheen-takes-congressional-seat-to-keep-delegation-all-democratic/",
+    "https://www.yahoo.com/news/democrat-maggie-goodlander-wins-election-060718340.html"
+   ],
+   "reportingPct": 25,
+   "calledBy": "AP",
+   "asOf": "2026-11-03 election night (ET), ~25% of votes tallied"
+  },
+  {
+   "id": "VT-ushouse-AL",
+   "office": "ushouse",
+   "st": "VT",
+   "district": "AL",
+   "candidates": [
+    {
+     "name": "Becca Balint",
+     "party": "D",
+     "pct": 64,
+     "incumbent": true,
+     "winner": true
+    },
+    {
+     "name": "Gerald Malloy",
+     "party": "R",
+     "pct": 32
+    },
+    {
+     "name": "Phoenix Altair",
+     "party": "I"
+    },
+    {
+     "name": "Adam Ortiz",
+     "party": "I"
+    },
+    {
+     "name": "Suzanne Seymour",
+     "party": "I"
+    },
+    {
+     "name": "Ryan Walton",
+     "party": "I"
+    }
+   ],
+   "called": true,
+   "status": "called",
+   "sources": [
+    "https://www.nhpr.org/2026-11-03/u-s-rep-becca-balint-wins-reelection",
+    "https://www.wcax.com/2026/11/04/balint-reelected-vermonts-us-house-seat/"
+   ],
+   "calledBy": "AP",
+   "asOf": "2026-11-03 election night (ET), early unofficial",
+   "note": "Each independent ~1%."
+  },
+  {
+   "id": "MA-ushouse-1",
+   "office": "ushouse",
+   "st": "MA",
+   "district": "1",
+   "candidates": [
+    {
+     "name": "Richard Neal",
+     "party": "D",
+     "pct": 64.5,
+     "incumbent": true,
+     "winner": true
+    },
+    {
+     "name": "Nadia Milleron",
+     "party": "I",
+     "pct": 35.5
+    }
+   ],
+   "called": true,
+   "status": "called",
+   "sources": [
+    "https://wtop.com/national/2026/11/democrat-richard-neal-wins-reelection-to-u-s-house-in-massachusetts-1st-congressional-district",
+    "https://www.nbcboston.com/elections/ma-nh-maine-midterm-results-2026/4034229/"
+   ],
+   "reportingPct": 2.4,
+   "calledBy": "AP",
+   "asOf": "2026-11-03 election night (ET), NBC at 2.4% expected vote"
+  },
+  {
+   "id": "MA-ushouse-2",
+   "office": "ushouse",
+   "st": "MA",
+   "district": "2",
+   "candidates": [
+    {
+     "name": "Jim McGovern",
+     "party": "D",
+     "incumbent": true,
+     "winner": true
+    }
+   ],
+   "called": true,
+   "status": "called",
+   "sources": [
+    "https://www.foxnews.com/elections/2026/midterm-results/house"
+   ],
+   "calledBy": "AP",
+   "asOf": "2026-11-03 election night (ET)",
+   "note": "Unopposed."
+  },
+  {
+   "id": "MA-ushouse-3",
+   "office": "ushouse",
+   "st": "MA",
+   "district": "3",
+   "candidates": [
+    {
+     "name": "Lori Trahan",
+     "party": "D",
+     "pct": 66.5,
+     "incumbent": true
+    },
+    {
+     "name": "Gary Grossi",
+     "party": "R",
+     "pct": 30.2
+    }
+   ],
+   "called": false,
+   "status": "leading",
+   "sources": [
+    "https://www.nbcboston.com/elections/ma-nh-maine-midterm-results-2026/4034229/"
+   ],
+   "reportingPct": 1.8,
+   "asOf": "2026-11-03 election night (ET), NBC at 1.8% expected vote"
+  },
+  {
+   "id": "MA-ushouse-4",
+   "office": "ushouse",
+   "st": "MA",
+   "district": "4",
+   "candidates": [
+    {
+     "name": "Jake Auchincloss",
+     "party": "D",
+     "pct": 82.3,
+     "incumbent": true
+    },
+    {
+     "name": "Thomas Stalcup",
+     "party": "R",
+     "pct": 17.7
+    }
+   ],
+   "called": false,
+   "status": "leading",
+   "sources": [
+    "https://www.nbcboston.com/elections/ma-nh-maine-midterm-results-2026/4034229/"
+   ],
+   "reportingPct": 8.2,
+   "asOf": "2026-11-03 election night (ET), NBC at 8.2% expected vote"
+  },
+  {
+   "id": "MA-ushouse-5",
+   "office": "ushouse",
+   "st": "MA",
+   "district": "5",
+   "candidates": [
+    {
+     "name": "Katherine Clark",
+     "party": "D",
+     "incumbent": true,
+     "winner": true
+    }
+   ],
+   "called": true,
+   "status": "called",
+   "sources": [
+    "https://www.foxnews.com/elections/2026/midterm-results/house"
+   ],
+   "calledBy": "AP",
+   "asOf": "2026-11-03 election night (ET)",
+   "note": "Unopposed."
+  },
+  {
+   "id": "MA-ushouse-6",
+   "office": "ushouse",
+   "st": "MA",
+   "district": "6",
+   "candidates": [
+    {
+     "name": "Dan Koh",
+     "party": "D"
+    },
+    {
+     "name": "Micah Jones",
+     "party": "R"
+    }
+   ],
+   "called": false,
+   "status": "leading",
+   "sources": [
+    "https://www.bostonglobe.com/2026/11/03/nation/massachusetts-election-live-updates-results-2026/"
+   ],
+   "asOf": "2026-11-03 election night (ET)",
+   "note": "Open seat (Moulton ran for Senate). Koh declared victory; Globe: AP had not called and Jones had not conceded. No numbers captured."
+  },
+  {
+   "id": "MA-ushouse-7",
+   "office": "ushouse",
+   "st": "MA",
+   "district": "7",
+   "candidates": [
+    {
+     "name": "Ayanna Pressley",
+     "party": "D",
+     "incumbent": true,
+     "winner": true
+    }
+   ],
+   "called": true,
+   "status": "called",
+   "sources": [
+    "https://www.foxnews.com/elections/2026/midterm-results/house"
+   ],
+   "calledBy": "AP",
+   "asOf": "2026-11-03 election night (ET)",
+   "note": "Unopposed."
+  },
+  {
+   "id": "MA-ushouse-8",
+   "office": "ushouse",
+   "st": "MA",
+   "district": "8",
+   "candidates": [
+    {
+     "name": "Stephen Lynch",
+     "party": "D",
+     "pct": 68.5,
+     "incumbent": true
+    },
+    {
+     "name": "Robert Burke",
+     "party": "R",
+     "pct": 27.3
+    }
+   ],
+   "called": false,
+   "status": "leading",
+   "sources": [
+    "https://www.nbcboston.com/elections/ma-nh-maine-midterm-results-2026/4034229/"
+   ],
+   "reportingPct": 6.3,
+   "asOf": "2026-11-03 election night (ET), NBC at 6.3% expected vote"
+  },
+  {
+   "id": "MA-ushouse-9",
+   "office": "ushouse",
+   "st": "MA",
+   "district": "9",
+   "candidates": [
+    {
+     "name": "Bill Keating",
+     "party": "D",
+     "pct": 72.5,
+     "incumbent": true
+    },
+    {
+     "name": "Tyler Macallister",
+     "party": "R",
+     "pct": 27.5
+    }
+   ],
+   "called": false,
+   "status": "leading",
+   "sources": [
+    "https://www.nbcboston.com/elections/ma-nh-maine-midterm-results-2026/4034229/"
+   ],
+   "reportingPct": 0,
+   "asOf": "2026-11-03 election night (ET), NBC, only 51 votes counted"
+  },
+  {
+   "id": "CT-ushouse-1",
+   "office": "ushouse",
+   "st": "CT",
+   "district": "1",
+   "candidates": [
+    {
+     "name": "Luke Bronin",
+     "party": "D",
+     "pct": 77.6
+    },
+    {
+     "name": "Amy Chai",
+     "party": "R"
+    }
+   ],
+   "called": false,
+   "status": "leading",
+   "sources": [
+    "https://patch.com/connecticut/hartford/1st-district-congress-bronin-claims-victory-against-chai-update",
+    "https://www.nbcconnecticut.com/elections/connecticut-midterm-election-results-2026/3787258/"
+   ],
+   "reportingPct": 1.4,
+   "asOf": "2026-11-03 election night (ET), NBC CT at 1.4% expected vote",
+   "note": "Open seat (Bronin beat Larson in Aug. primary). Patch reports Bronin claimed victory; no AP call seen. A Green Party candidate also ran."
+  },
+  {
+   "id": "CT-ushouse-2",
+   "office": "ushouse",
+   "st": "CT",
+   "district": "2",
+   "candidates": [
+    {
+     "name": "Joe Courtney",
+     "party": "D",
+     "pct": 56.2,
+     "incumbent": true
+    },
+    {
+     "name": "George Austin",
+     "party": "R",
+     "pct": 43.8
+    }
+   ],
+   "called": false,
+   "status": "leading",
+   "sources": [
+    "https://www.nbcnews.com/politics/2026-elections/connecticut-us-house-district-2-results"
+   ],
+   "reportingPct": 11.3,
+   "asOf": "2026-11-03 election night (ET), NBC at 11.3% expected vote"
+  },
+  {
+   "id": "CT-ushouse-3",
+   "office": "ushouse",
+   "st": "CT",
+   "district": "3",
+   "candidates": [
+    {
+     "name": "Rosa DeLauro",
+     "party": "D",
+     "votes": 9852,
+     "pct": 76.5,
+     "incumbent": true
+    },
+    {
+     "name": "Christopher Lancia",
+     "party": "R",
+     "pct": 21
+    }
+   ],
+   "called": false,
+   "status": "leading",
+   "sources": [
+    "https://www.nbcconnecticut.com/elections/connecticut-midterm-election-results-2026/3787258/",
+    "https://thehill.com/homenews/house/6182308-connecticut-live-results-2026-house-elections/"
+   ],
+   "reportingPct": 5.1,
+   "asOf": "2026-11-03 election night (ET), NBC at 5.1% expected vote"
+  },
+  {
+   "id": "CT-ushouse-4",
+   "office": "ushouse",
+   "st": "CT",
+   "district": "4",
+   "candidates": [
+    {
+     "name": "Jim Himes",
+     "party": "D",
+     "votes": 21423,
+     "pct": 73.7,
+     "incumbent": true
+    },
+    {
+     "name": "Michael Goldstein",
+     "party": "R",
+     "pct": 24.3
+    }
+   ],
+   "called": false,
+   "status": "leading",
+   "sources": [
+    "https://www.nbcconnecticut.com/elections/connecticut-midterm-election-results-2026/3787258/",
+    "https://thehill.com/homenews/house/6182308-connecticut-live-results-2026-house-elections/"
+   ],
+   "reportingPct": 12.2,
+   "asOf": "2026-11-03 election night (ET), NBC at 12.2% expected vote"
+  },
+  {
+   "id": "CT-ushouse-5",
+   "office": "ushouse",
+   "st": "CT",
+   "district": "5",
+   "candidates": [
+    {
+     "name": "Jahana Hayes",
+     "party": "D",
+     "votes": 1748,
+     "pct": 67.1,
+     "incumbent": true
+    },
+    {
+     "name": "Chris Shea",
+     "party": "R"
+    }
+   ],
+   "called": false,
+   "status": "leading",
+   "sources": [
+    "https://www.nbcconnecticut.com/elections/connecticut-midterm-election-results-2026/3787258/",
+    "https://ctmirror.org/2026/11/03/ct-5th-congressional-district-2026-live-election-results/"
+   ],
+   "reportingPct": 1,
+   "asOf": "2026-11-03 election night (ET), NBC CT at ~1% expected vote"
+  },
+  {
+   "id": "RI-ushouse-1",
+   "office": "ushouse",
+   "st": "RI",
+   "district": "1",
+   "candidates": [
+    {
+     "name": "Gabe Amo",
+     "party": "D",
+     "pct": 66.5,
+     "incumbent": true,
+     "winner": true
+    },
+    {
+     "name": "Kellie Keenan",
+     "party": "R",
+     "pct": 29.3
+    },
+    {
+     "name": "Pedro DeSouza",
+     "party": "I",
+     "pct": 4.1
+    }
+   ],
+   "called": true,
+   "status": "called",
+   "sources": [
+    "https://rhodeislandcurrent.com/2026/11/03/amo-wins-reelection-to-us-house/",
+    "https://www.bostonglobe.com/2026/11/03/metro/ri-election-representatives-amo-magaziner-senator-reed-whitehouse/"
+   ],
+   "calledBy": "AP",
+   "asOf": "2026-11-03 election night (ET), unofficial",
+   "note": "AP call 8:32 p.m. with 39% counted."
+  },
+  {
+   "id": "RI-ushouse-2",
+   "office": "ushouse",
+   "st": "RI",
+   "district": "2",
+   "candidates": [
+    {
+     "name": "Seth Magaziner",
+     "party": "D",
+     "pct": 61.3,
+     "incumbent": true,
+     "winner": true
+    },
+    {
+     "name": "Vic Mellor",
+     "party": "R",
+     "pct": 38.5
+    }
+   ],
+   "called": true,
+   "status": "called",
+   "sources": [
+    "https://rhodeislandcurrent.com/2026/11/03/magaziner-wins-reelection-to-us-house/",
+    "https://www.bostonglobe.com/2026/11/03/metro/ri-election-representatives-amo-magaziner-senator-reed-whitehouse/"
+   ],
+   "calledBy": "AP",
+   "asOf": "2026-11-03 election night (ET), unofficial"
+  },
+  {
+   "id": "NH-execcouncil-1",
+   "office": "execcouncil",
+   "st": "NH",
+   "district": "1",
+   "candidates": [
+    {
+     "name": "Joseph Kenney",
+     "party": "R",
+     "incumbent": true
+    },
+    {
+     "name": "Luz Bay",
+     "party": "D"
+    }
+   ],
+   "called": false,
+   "status": "no-data",
+   "sources": [
+    "https://www.citizenscount.org/elections/2026-nh-executive-council-general-election",
+    "https://www.citizenscount.org/elections/2026-nh-executive-council-primary"
+   ]
+  },
+  {
+   "id": "NH-execcouncil-2",
+   "office": "execcouncil",
+   "st": "NH",
+   "district": "2",
+   "candidates": [
+    {
+     "name": "Karen Liot Hill",
+     "party": "D",
+     "incumbent": true
+    },
+    {
+     "name": "Tobin Menard",
+     "party": "R"
+    }
+   ],
+   "called": false,
+   "status": "no-data",
+   "sources": [
+    "https://www.citizenscount.org/elections/2026-nh-executive-council-general-election",
+    "https://www.citizenscount.org/elections/2026-nh-executive-council-primary"
+   ]
+  },
+  {
+   "id": "NH-execcouncil-3",
+   "office": "execcouncil",
+   "st": "NH",
+   "district": "3",
+   "candidates": [
+    {
+     "name": "Janet Stevens",
+     "party": "R",
+     "incumbent": true
+    },
+    {
+     "name": "Lisa Kennedy Sheldon",
+     "party": "D"
+    }
+   ],
+   "called": false,
+   "status": "no-data",
+   "sources": [
+    "https://www.citizenscount.org/elections/2026-nh-executive-council-general-election",
+    "https://www.citizenscount.org/elections/2026-nh-executive-council-primary"
+   ]
+  },
+  {
+   "id": "NH-execcouncil-4",
+   "office": "execcouncil",
+   "st": "NH",
+   "district": "4",
+   "candidates": [
+    {
+     "name": "John Stephen",
+     "party": "R",
+     "incumbent": true
+    }
+   ],
+   "called": false,
+   "status": "no-data",
+   "sources": [
+    "https://www.citizenscount.org/elections/2026-nh-executive-council-general-election",
+    "https://www.citizenscount.org/elections/2026-nh-executive-council-primary"
+   ],
+   "note": "Democratic nominee not captured."
+  },
+  {
+   "id": "NH-execcouncil-5",
+   "office": "execcouncil",
+   "st": "NH",
+   "district": "5",
+   "candidates": [],
+   "called": false,
+   "status": "no-data",
+   "sources": [
+    "https://www.citizenscount.org/elections/2026-nh-executive-council-general-election",
+    "https://www.citizenscount.org/elections/2026-nh-executive-council-primary"
+   ]
+  },
+  {
+   "id": "NH-sthouse-Keene Ward 1",
+   "office": "sthouse",
+   "st": "NH",
+   "district": "Keene Ward 1",
+   "candidates": [
+    {
+     "name": "Dylan Germana",
+     "party": "D",
+     "votes": 1105,
+     "winner": true
+    },
+    {
+     "name": "Timothy J. Donovan",
+     "party": "R",
+     "votes": 314
+    }
+   ],
+   "called": true,
+   "status": "called",
+   "sources": [
+    "https://mykeenenow.com/news/219912-pappas-wins-u-s-senate-race-as-sununu-concedes-democrats-hold-city-house-seats/",
+    "https://www.keenesentinel.com/news/local/live-results-nov-3-election/article_a67b47ae-9797-4ed4-94d3-7de781f4be8d.html"
+   ],
+   "calledBy": "unofficial local results (My Keene Now / Keene Sentinel)",
+   "asOf": "2026-11-03 election night (ET)"
+  },
+  {
+   "id": "NH-sthouse-Cheshire 7",
+   "office": "sthouse",
+   "st": "NH",
+   "district": "Cheshire 7",
+   "candidates": [
+    {
+     "name": "Terri O'Rorke",
+     "party": "D",
+     "votes": 1524,
+     "incumbent": true,
+     "winner": true
+    },
+    {
+     "name": "Jonathan Liptak",
+     "party": "R",
+     "votes": 456
+    }
+   ],
+   "called": true,
+   "status": "called",
+   "sources": [
+    "https://mykeenenow.com/news/219912-pappas-wins-u-s-senate-race-as-sununu-concedes-democrats-hold-city-house-seats/",
+    "https://www.keenesentinel.com/news/local/live-results-nov-3-election/article_a67b47ae-9797-4ed4-94d3-7de781f4be8d.html"
+   ],
+   "calledBy": "unofficial local results (My Keene Now / Keene Sentinel)",
+   "asOf": "2026-11-03 election night (ET)",
+   "note": "Keene Ward 2."
+  },
+  {
+   "id": "NH-sthouse-Keene Ward 3",
+   "office": "sthouse",
+   "st": "NH",
+   "district": "Keene Ward 3",
+   "candidates": [
+    {
+     "name": "Dru Fox",
+     "party": "D",
+     "votes": 1527,
+     "incumbent": true,
+     "winner": true
+    }
+   ],
+   "called": true,
+   "status": "called",
+   "sources": [
+    "https://mykeenenow.com/news/219912-pappas-wins-u-s-senate-race-as-sununu-concedes-democrats-hold-city-house-seats/",
+    "https://www.keenesentinel.com/news/local/live-results-nov-3-election/article_a67b47ae-9797-4ed4-94d3-7de781f4be8d.html"
+   ],
+   "calledBy": "unofficial local results (My Keene Now / Keene Sentinel)",
+   "asOf": "2026-11-03 election night (ET)",
+   "note": "Unopposed."
+  },
+  {
+   "id": "NH-sthouse-Keene Ward 4",
+   "office": "sthouse",
+   "st": "NH",
+   "district": "Keene Ward 4",
+   "candidates": [
+    {
+     "name": "Jodi Newell",
+     "party": "D",
+     "incumbent": true,
+     "winner": true
+    },
+    {
+     "name": "Robert Johnson",
+     "party": "R"
+    }
+   ],
+   "called": true,
+   "status": "called",
+   "sources": [
+    "https://mykeenenow.com/news/219912-pappas-wins-u-s-senate-race-as-sununu-concedes-democrats-hold-city-house-seats/",
+    "https://www.keenesentinel.com/news/local/live-results-nov-3-election/article_a67b47ae-9797-4ed4-94d3-7de781f4be8d.html"
+   ],
+   "calledBy": "unofficial local results (My Keene Now / Keene Sentinel)",
+   "asOf": "2026-11-03 election night (ET)"
+  },
+  {
+   "id": "NH-sthouse-Keene Ward 5",
+   "office": "sthouse",
+   "st": "NH",
+   "district": "Keene Ward 5",
+   "candidates": [
+    {
+     "name": "Philip Jones",
+     "party": "D",
+     "incumbent": true,
+     "winner": true
+    },
+    {
+     "name": "Marissa W. Salisbury",
+     "party": "R"
+    }
+   ],
+   "called": true,
+   "status": "called",
+   "sources": [
+    "https://mykeenenow.com/news/219912-pappas-wins-u-s-senate-race-as-sununu-concedes-democrats-hold-city-house-seats/",
+    "https://www.keenesentinel.com/news/local/live-results-nov-3-election/article_a67b47ae-9797-4ed4-94d3-7de781f4be8d.html"
+   ],
+   "calledBy": "unofficial local results (My Keene Now / Keene Sentinel)",
+   "asOf": "2026-11-03 election night (ET)"
+  },
+  {
+   "id": "NH-sthouse-Cheshire 16",
+   "office": "sthouse",
+   "st": "NH",
+   "district": "Cheshire 16",
+   "candidates": [
+    {
+     "name": "Lucius Parshall",
+     "party": "D",
+     "winner": true
+    },
+    {
+     "name": "Alexander Nalevanko",
+     "party": "R"
+    }
+   ],
+   "called": true,
+   "status": "called",
+   "sources": [
+    "https://mykeenenow.com/news/219912-pappas-wins-u-s-senate-race-as-sununu-concedes-democrats-hold-city-house-seats/",
+    "https://www.keenesentinel.com/news/local/live-results-nov-3-election/article_a67b47ae-9797-4ed4-94d3-7de781f4be8d.html"
+   ],
+   "calledBy": "unofficial local results (My Keene Now / Keene Sentinel)",
+   "asOf": "2026-11-03 election night (ET)",
+   "note": "Floterial. Only Keene Ward 2 portion seen: Parshall 1,479, Nalevanko 482."
+  },
+  {
+   "id": "RI-sthouse-19",
+   "office": "sthouse",
+   "st": "RI",
+   "district": "19",
+   "candidates": [
+    {
+     "name": "Joseph McNamara",
+     "party": "D",
+     "pct": 66,
+     "incumbent": true,
+     "winner": true
+    },
+    {
+     "name": "Patrick Maloney Jr.",
+     "party": "R",
+     "pct": 34
+    }
+   ],
+   "called": true,
+   "status": "called",
+   "sources": [
+    "https://warwickpost.com/election-2026-blue-wave-continues-in-warwick/"
+   ],
+   "calledBy": "WarwickPost (unofficial)",
+   "asOf": "2026-11-03 election night (ET)"
+  }
+ ],
+ "chambers": [
+  {
+   "st": "NH",
+   "office": "sthouse",
+   "seats": 400,
+   "D": 0,
+   "R": 0,
+   "other": 0,
+   "undecided": 400,
+   "control": null,
+   "called": false,
+   "preElection": {
+    "R": 212,
+    "D": 169
+   },
+   "sources": [
+    "https://www.270towin.com/2026-election-results-live/state/new-hampshire/"
+   ]
+  },
+  {
+   "st": "NH",
+   "office": "stsen",
+   "seats": 24,
+   "D": 0,
+   "R": 0,
+   "other": 0,
+   "undecided": 24,
+   "control": null,
+   "called": false,
+   "preElection": {
+    "R": 16,
+    "D": 8
+   },
+   "sources": [
+    "https://newhampshirebulletin.com/2026/11/03/new-hampshire-democrats-face-an-uphill-battle-to-win-control-of-state-senate/"
+   ]
+  },
+  {
+   "st": "VT",
+   "office": "sthouse",
+   "seats": 150,
+   "D": 0,
+   "R": 0,
+   "other": 0,
+   "undecided": 150,
+   "control": null,
+   "called": false,
+   "preElection": {
+    "D": 87,
+    "R": 56,
+    "other": 7
+   },
+   "sources": [
+    "https://www.270towin.com/2026-election-results-live/state/vermont/"
+   ]
+  },
+  {
+   "st": "VT",
+   "office": "stsen",
+   "seats": 30,
+   "D": 0,
+   "R": 0,
+   "other": 0,
+   "undecided": 30,
+   "control": null,
+   "called": false,
+   "preElection": {
+    "D": 16,
+    "R": 13,
+    "other": 1
+   },
+   "sources": [
+    "https://www.270towin.com/2026-election-results-live/state/vermont/"
+   ]
+  },
+  {
+   "st": "ME",
+   "office": "sthouse",
+   "seats": 151,
+   "D": 0,
+   "R": 0,
+   "other": 0,
+   "undecided": 151,
+   "control": null,
+   "called": false,
+   "preElection": {
+    "D": 75,
+    "R": 73,
+    "other": 3
+   },
+   "sources": [
+    "https://www.yahoo.com/news/politics/articles/maine-2026-legislature-election-party-213800857.html"
+   ]
+  },
+  {
+   "st": "ME",
+   "office": "stsen",
+   "seats": 35,
+   "D": 0,
+   "R": 0,
+   "other": 0,
+   "undecided": 35,
+   "control": null,
+   "called": false,
+   "preElection": {
+    "D": 20,
+    "R": 14,
+    "other": 1
+   },
+   "sources": [
+    "https://www.yahoo.com/news/politics/articles/maine-2026-legislature-election-party-213800857.html"
+   ]
+  },
+  {
+   "st": "MA",
+   "office": "sthouse",
+   "seats": 160,
+   "D": 0,
+   "R": 0,
+   "other": 0,
+   "undecided": 160,
+   "control": null,
+   "called": false,
+   "preElection": {
+    "D": 132,
+    "R": 25,
+    "other": 1,
+    "vacant": 2
+   },
+   "sources": [
+    "https://www.270towin.com/2026-election-results-live/state/massachusetts/"
+   ]
+  },
+  {
+   "st": "MA",
+   "office": "stsen",
+   "seats": 40,
+   "D": 0,
+   "R": 0,
+   "other": 0,
+   "undecided": 40,
+   "control": null,
+   "called": false,
+   "preElection": {
+    "D": 35,
+    "R": 5
+   },
+   "sources": [
+    "https://www.270towin.com/2026-election-results-live/state/massachusetts/"
+   ]
+  },
+  {
+   "st": "CT",
+   "office": "sthouse",
+   "seats": 151,
+   "D": 0,
+   "R": 0,
+   "other": 0,
+   "undecided": 151,
+   "control": null,
+   "called": false,
+   "preElection": {
+    "D": 102,
+    "R": 49
+   },
+   "sources": [
+    "https://www.270towin.com/2026-election-results-live/state/connecticut/"
+   ]
+  },
+  {
+   "st": "CT",
+   "office": "stsen",
+   "seats": 36,
+   "D": 0,
+   "R": 0,
+   "other": 0,
+   "undecided": 36,
+   "control": null,
+   "called": false,
+   "preElection": {
+    "D": 25,
+    "R": 11
+   },
+   "sources": [
+    "https://www.270towin.com/2026-election-results-live/state/connecticut/"
+   ]
+  },
+  {
+   "st": "RI",
+   "office": "sthouse",
+   "seats": 75,
+   "D": 0,
+   "R": 0,
+   "other": 0,
+   "undecided": 75,
+   "control": null,
+   "called": false,
+   "preElection": {
+    "D": 63,
+    "R": 10,
+    "other_or_vacant": 2
+   },
+   "sources": [
+    "https://en.wikipedia.org/wiki/2026_Rhode_Island_House_of_Representatives_election"
+   ]
+  },
+  {
+   "st": "RI",
+   "office": "stsen",
+   "seats": 38,
+   "D": 0,
+   "R": 0,
+   "other": 0,
+   "undecided": 38,
+   "control": null,
+   "called": false,
+   "preElection": {
+    "D": 34,
+    "R": 4
+   },
+   "sources": [
+    "https://en.wikipedia.org/wiki/2026_Rhode_Island_Senate_election"
+   ]
+  }
+ ]
+}

@@ -26,7 +26,7 @@
     { key: 'ussen', label: 'U.S. Senate', layer: 'counties', statewide: true },
     { key: 'ushouse', label: 'U.S. House', layer: 'cd', unit: 'district' },
     { key: 'stsen', label: 'State Senate', layer: 'sldu', unit: 'district' },
-    { key: 'sthouse', label: 'State House', layer: 'sldl', unit: 'district' },
+    { key: 'sthouse', label: 'State House', layer: 'sldl', unit: 'district', overlay: 'sldl_flot' },
     { key: 'ltgov', label: 'Lt. Governor', layer: 'counties', statewide: true },
     { key: 'ag', label: 'Attorney General', layer: 'counties', statewide: true },
     { key: 'sos', label: 'Secretary of State', layer: 'counties', statewide: true },
@@ -51,6 +51,7 @@
     P: { name: 'Progressive', color: '#9b6ad6' },
     O: { name: 'Other', color: '#8a93a6' },
     V: { name: 'Vacant', color: '#4a5368' },
+    U: { name: 'Not yet decided', color: '#3a4357' },
   };
   const NONE = '#232c40';
   const TINT = '#dfe4ee';
@@ -75,7 +76,7 @@
   /* ---------- district-name canonicalisation (joins data to shapes) ---------- */
   function canon(s) {
     let x = String(s ?? '').toLowerCase().normalize('NFKD').replace(/[̀-ͯ]/g, '');
-    x = x.replace(/&/g, ' and ');
+    x = x.replace(/&/g, ' and ').replace(/\band\b/g, ' ');
     x = x.replace(/\b(state|house|senate|senatorial|representatives?|assembly|legislative|congressional|district|dist|no)\b\.?/g, ' ');
     x = x.replace(/[^a-z0-9]+/g, ' ').trim().replace(/\s+/g, ' ');
     x = x.replace(/\b0+(\d)/g, '$1');
@@ -98,6 +99,7 @@
   const defs = svg.append('defs');
   const gFill = gRoot.append('g');
   const gCounty = gRoot.append('g');
+  const gOver = gRoot.append('g');
   const gState = gRoot.append('g');
   const gLabel = gRoot.append('g');
   const tip = $('#tip');
@@ -184,7 +186,7 @@
     for (const f of features) {
       const p = f.properties, st = p.st;
       const raw = String(p.id || '');
-      const keys = [p.num, p.name, p.namelsad, raw.startsWith(st + '-') ? raw.slice(st.length + 1) : null, ...(p.aliases || [])];
+      const keys = [p.num, p.alt, p.name, p.namelsad, raw.startsWith(st + '-') ? raw.slice(st.length + 1) : null, ...(p.aliases || [])];
       for (const k of keys) {
         if (k == null || k === '') continue;
         const c = canon(k);
@@ -204,11 +206,12 @@
     const o = OFF[officeKey];
     const layer = S.layers[o.layer];
     if (!layer) return null;
-    if (geoId && layer.byId.has(geoId)) return layer.byId.get(geoId);
+    const layers = [layer, o.overlay && S.layers[o.overlay]].filter(Boolean);
+    for (const L of layers) if (geoId && L.byId.has(geoId)) return L.byId.get(geoId);
     if (district == null) return null;
     const tries = [district, String(district).replace(/^.*?district\s*/i, '')];
-    for (const d of tries) {
-      const f = layer.byKey.get(`${st}|${canon(d)}`);
+    for (const L of layers) for (const d of tries) {
+      const f = L.byKey.get(`${st}|${canon(d)}`);
       if (f) return f;
     }
     if (officeKey === 'ushouse') return layer.byId.get(`${st}-${canon(district) === 'al' ? 'AL' : canon(district)}`) || null;
@@ -221,7 +224,7 @@
     for (const rec of list) {
       const office = officeOf(rec.office);
       const o = OFF[office];
-      if (!o || !ST[rec.st]) continue;
+      if (!o || !ST[rec.st] || rec.nonVoting) continue;
       ((idx.all[office] ||= {})[rec.st] ||= []).push(rec);
       if (o.statewide || !S.layers[o.layer]) {
         ((idx.st[office] ||= {})[rec.st] ||= []).push(rec);
@@ -348,7 +351,6 @@
         }
         // Statewide offices with seats not up (e.g. the other U.S. senator) keep that holder in the mix.
         if (any) {
-          if (statewide && S.office === 'ussen') holders.filter(h => h.upIn2026 === false).forEach(h => parts.push(pk(h.party)));
           out = { parties: parts, called, margin: parts.length > 1 ? null : margin };
         }
       }
@@ -368,7 +370,7 @@
 
   /* ---------- rendering ---------- */
   function fit() {
-    const box = $('.mapwrap').getBoundingClientRect();
+    const box = svg.node().getBoundingClientRect();
     width = Math.max(300, box.width);
     height = Math.max(300, box.height);
     svg.attr('viewBox', `0 0 ${width} ${height}`);
@@ -414,6 +416,19 @@
       gState.selectAll('path').data(stFeats).enter().append('path').attr('class', 'state-line');
       gLabel.selectAll('text').data(stFeats).enter().append('text').attr('class', 'state-label').attr('text-anchor', 'middle').text(d => d.properties.st);
     }
+    // Overlapping districts (NH floterials) are drawn as party-colored outlines on top.
+    const ov = OFF[S.office].overlay && S.layers[OFF[S.office].overlay];
+    const os = gOver.selectAll('path.flot').data(ov ? ov.fc.features : [], d => S.office + '|' + d.properties.id);
+    os.exit().remove();
+    os.enter().append('path').attr('class', 'flot')
+      .on('mousemove', onHover).on('mouseleave', () => { tip.hidden = true; })
+      .on('click', (ev, d) => { ev.stopPropagation(); select(d); })
+      .merge(os).each(function (d) {
+        const a = assess(d); d.__a = a;
+        const s = styleFor(a);
+        const col = /^url/.test(s.fill) || s.fill === NONE ? '#e9eef8' : s.fill;
+        d3.select(this).attr('stroke', col).attr('stroke-opacity', Math.max(0.5, s.opacity));
+      });
     gCounty.style('display', S.countyLines && OFF[S.office].layer !== 'counties' ? null : 'none');
     renderPaths();
   }
@@ -421,6 +436,7 @@
   function renderPaths() {
     if (!path) return;
     gFill.selectAll('path.feat').attr('d', path);
+    gOver.selectAll('path.flot').attr('d', path);
     gCounty.selectAll('path').attr('d', path);
     gState.selectAll('path').attr('d', path);
     const nudge = { MA: [0, -0.15], RI: [0.12, 0], NH: [0, 0.12], CT: [0, 0], VT: [0, 0], ME: [0, 0] };
@@ -503,8 +519,9 @@
   function featTitle(f) {
     const p = f.properties, o = OFF[S.office];
     if (o.statewide || !S.layers[o.layer]) return `${p.name || p.id}${ST[p.st] ? ', ' + p.st : ''}`;
+    if (p.floterial) return `${ST[p.st].name} House · Floterial ${p.num || p.name} = ${String(p.bases || '').split(',').length} base districts combined`;
     if (S.office === 'ushouse') return `${ST[p.st].name} ${String(p.id).endsWith('AL') ? 'at-large' : 'District ' + (p.num || String(p.id).split('-')[1])}`;
-    return `${ST[p.st].name} ${o.label} · ${p.name || p.num || p.id}`;
+    return `${ST[p.st].name} ${o.label} · ${p.num || p.name || p.id}`;
   }
 
   function holdersHTML(holders, compact) {
@@ -567,6 +584,7 @@
   function select(f) {
     S.selected = f.properties.id;
     gFill.selectAll('path.feat').classed('sel', d => d.properties.id === S.selected);
+    gOver.selectAll('path.flot').classed('sel', d => d.properties.id === S.selected);
     const a = assess(f);
     const d = $('#detail');
     d.innerHTML = `<button class="x" aria-label="Close">×</button><h3>${esc(featTitle(f))}</h3><div class="meta">${esc(OFF[S.office].label)}</div>` + featureBody(a, f, false);
@@ -652,8 +670,8 @@
     const ch = S.chambers[`${s.st}|${S.office}`];
     if (ch) {
       const comp = ['D', 'R', 'other'].filter(k => ch[k]).map(k => [k === 'other' ? 'O' : k, ch[k]]);
-      if (ch.undecided) comp.push(['V', ch.undecided]);
-      h += `<div class="sublabel">2026 chamber result${ch.called ? '' : ' (so far)'}</div>` + seatBar(comp, ch.seats || d3.sum(comp, x => x[1])).replace('Vacant', 'Undecided');
+      if (ch.undecided) comp.push(['U', ch.undecided]);
+      h += `<div class="sublabel">2026 chamber result${ch.called ? '' : ' (so far)'}</div>` + seatBar(comp, ch.seats || d3.sum(comp, x => x[1]));
       if (ch.control) h += `<div class="status">Control: <b>${esc(pname(pk(ch.control)))}</b>${ch.called ? ' <span class="pill called">Called</span>' : ''}</div>`;
     }
     if (t.won.length || t.lead.length) {
@@ -687,5 +705,6 @@
     renderNotes();
   }
 
+  window.NEMap = S; // exposed for debugging in the console
   init();
 })();

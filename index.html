@@ -80,6 +80,9 @@
     font-size: 28px; margin-bottom: 18px;
   }
   .icon.sun  { background: linear-gradient(145deg, rgba(255,194,75,0.22), rgba(255,159,28,0.10)); border: 1px solid rgba(255,194,75,0.35); }
+  .icon.vote { background: linear-gradient(145deg, rgba(59,125,221,0.24), rgba(224,72,63,0.16)); border: 1px solid rgba(148,163,184,0.35); }
+  a.card.vote .go { color: #93b4ef; }
+  a.card.vote { grid-column: 1 / -1; }
   .icon.game { background: linear-gradient(145deg, rgba(45,212,191,0.20), rgba(20,184,166,0.08)); border: 1px solid rgba(45,212,191,0.35); }
 
   a.card h2 { font-size: 20px; font-weight: 700; letter-spacing: -0.01em; margin-bottom: 8px; }
@@ -107,6 +110,13 @@
       <h2>Solar Charge Calculator</h2>
       <p>See how fast a home battery charges from solar — with a live fill curve, energy, cost &amp; CO₂ savings.</p>
       <span class="go">Open <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+    </a>
+
+    <a class="card vote" href="election.html">
+      <div class="icon vote">🗳️</div>
+      <h2>New England Election Map 2026</h2>
+      <p>Every office in CT, ME, MA, NH, RI &amp; VT — governor down to state house — shaded red/blue by district, with live 2026 results and current officeholders.</p>
+      <span class="go">Open map <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
     </a>
 
     <a class="card teal" href="game.html">
