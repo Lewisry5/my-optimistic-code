@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>New England Election Map</title>
+<meta name="description" content="Interactive 2026 New England election map: every office, every district, red/blue by party, with current officeholders for seats not on the ballot.">
+<link rel="stylesheet" href="election/style.css">
+</head>
+<body>
+<header class="top">
+  <div class="title">
+    <a class="back" href="index.html" aria-label="Back to apps">←</a>
+    <div>
+      <h1>New England Election Map <span class="yr">2026</span></h1>
+      <p class="sub">CT · ME · MA · NH · RI · VT — every office, every district</p>
+    </div>
+  </div>
+  <div class="live" id="live" title="Results file is re-checked automatically">
+    <span class="dot"></span><span id="liveText">Loading…</span>
+  </div>
+</header>
+
+<nav class="controls" aria-label="Map filters">
+  <div class="chips" id="officeChips" role="tablist" aria-label="Office"></div>
+  <div class="row2">
+    <div class="seg" role="radiogroup" aria-label="What to show">
+      <button type="button" data-mode="results" class="on" role="radio" aria-checked="true">2026 results</button>
+      <button type="button" data-mode="holders" role="radio" aria-checked="false">Current officeholders</button>
+    </div>
+    <div class="seg states" id="stateBtns" aria-label="Zoom to state"></div>
+    <label class="tog"><input type="checkbox" id="countyLines" checked> County lines</label>
+    <label class="tog"><input type="checkbox" id="marginShade" checked> Shade by margin</label>
+  </div>
+</nav>
+
+<main class="layout">
+  <section class="mapwrap" aria-label="Map">
+    <svg id="map" role="img" aria-label="Map of New England districts colored by party"></svg>
+    <div class="legend" id="legend"></div>
+    <div class="maphint">Scroll / pinch to zoom · drag to pan · click a district for details</div>
+    <div class="tooltip" id="tip" role="tooltip" hidden></div>
+    <div class="loading" id="loading">Loading map…</div>
+  </section>
+  <aside class="side">
+    <div id="detail" class="card detail" hidden></div>
+    <div id="regionSummary" class="card"></div>
+    <div id="stateCards"></div>
+    <details class="card notes">
+      <summary>About the data</summary>
+      <div id="dataNotes"></div>
+    </details>
+  </aside>
+</main>
+
+<script src="election/vendor/d3.min.js"></script>
+<script src="election/vendor/topojson-client.min.js"></script>
+<script src="election/app.js"></script>
+</body>
+</html>
